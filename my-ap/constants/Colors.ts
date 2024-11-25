@@ -22,7 +22,7 @@ export const Colors = {
   gray: {
       DEFAULT: "#BDBDBD",
       first: "#DDDDDD",
-      second: "#CDCDE0"
+      second: "#EDEDED"
       }
   ,
   light: {

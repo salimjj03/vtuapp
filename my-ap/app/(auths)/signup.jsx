@@ -9,11 +9,15 @@ import {Colors} from "@/constants/Colors"
 import {Link} from "expo-router"
 
 
-function SignIn(){
+function SignUp(){
 
     const [form, setForm] = useState(
         {
+            full_name: "",
             user_name: "",
+            email: "",
+            phone: "",
+            ref_id: "",
             password: ""
          }
         )
@@ -46,9 +50,11 @@ function SignIn(){
                 justifyContent: "center",
                 alignItems: "center",
                 minHeight: "100%",
-                gap: 20
+                gap: 15,
+                paddingTop: 20,
+                paddingBottom: 20,
                 }}>
-                <View>
+                {/* <View >
                 <Image
                 source={images.logo}
                 style={{
@@ -65,9 +71,9 @@ function SignIn(){
                 resizeMode="contain"
                 />
                 </View>
-
-                <Text className="font-psemibold text-xl">Welcome Back</Text>
-                <View className="bg-white justify-center
+ */}
+                <Text className="font-pbold text-3xl w-[85vw]">Sign Up</Text>
+                <View className="bg-white pt-2 justify-center
                 rounded-xl px-4  w-[90vw] "
                 style={{
                     shadowColor: Colors.primary.DEFAULT,
@@ -78,13 +84,58 @@ function SignIn(){
                     }}
                 >
                     <FormField
+                     title="Full Name"
+                     value={form.full_name}
+                     placeholder=" Full Name"
+                     onChange={(e) => setForm({...form, full_name: e})}
+                     required={true}
+                     isSubmitted={isSubmitted}
+                     labelShow={true}
+                     />
+
+                     <FormField
                      title="UserName"
                      value={form.user_name}
                      placeholder=" User name"
                      onChange={(e) => setForm({...form, user_name: e})}
+                     required={true}
+                     isSubmitted={isSubmitted}
+                     labelShow={true}
+                     />
+
+                     <FormField
+                     title="email"
+                     value={form.email}
+                     placeholder=" Email"
+                     onChange={(e) => setForm({...form, email: e})}
                      otherStyles=""
                      required={true}
                      isSubmitted={isSubmitted}
+                     keyboardType="email-address"
+                     labelShow={true}
+                     />
+
+                     <FormField
+                     title="phone"
+                     value={form.phone}
+                     placeholder=" phone"
+                     onChange={(e) => setForm({...form, phone: e})}
+                     otherStyles=""
+                     required={true}
+                     isSubmitted={isSubmitted}
+                     keyboardType="phone-pad"
+                     labelShow={true}
+                     />
+
+                     <FormField
+                     title="ref_id (optional)"
+                     value={form.ref_id}
+                     placeholder=" ref_id"
+                     onChange={(e) => setForm({...form, ref_id: e})}
+                     otherStyles=""
+                     required={true}
+                     isSubmitted={isSubmitted}
+                     labelShow={true}
                      />
 
                     <FormField
@@ -94,11 +145,12 @@ function SignIn(){
                      onChange={(e) => setForm({...form, password: e})}
                      required={true}
                      isSubmitted={isSubmitted}
+                     labelShow={true}
                      />
 
                      <CustomButton
                      containerStyle="my-5"
-                     title="Login"
+                     title="Create"
                      onPress={submitLogging}
                      isLoading={isLoading}
                      />
@@ -106,12 +158,12 @@ function SignIn(){
 
                 <View>
                     <Text className="font-psemibold text-xl">
-                        <Link href="/resetPassword">
-                            <Text className="text-black-200">Forgot Password </Text>
+                        <Link href="/signin">
+                            <Text className="text-black-200">Login </Text>
                         </Link>
                          |
-                         <Link href="/signup">
-                            <Text className="text-primary"> Register</Text>
+                         <Link href="/">
+                            <Text className="text-primary"> Home</Text>
                          </Link>
                     </Text>
                 </View>
@@ -122,4 +174,4 @@ function SignIn(){
         )
     }
 
-export default SignIn
+export default SignUp

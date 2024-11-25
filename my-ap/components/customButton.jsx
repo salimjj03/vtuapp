@@ -8,10 +8,10 @@ function CustomButton({isLoading, containerStyle, title, onPress, textStyle}){
         onPress={onPress}
         style={style.buttonOpacity}
         className={`items-center justify-center bg-primary
-            min-h-[62] rounded-lg ${containerStyle} ${isLoading ? "opacity-50" : ""}`}
+            min-h-[55] rounded-lg ${containerStyle} ${isLoading ? "opacity-50" : ""}`}
         disabled={isLoading}
         >
-            <Text style={style.text}> {title} </Text>
+            <Text style={style.text} className={`textStyle`}> {title} </Text>
         </TouchableOpacity>
         )
     }

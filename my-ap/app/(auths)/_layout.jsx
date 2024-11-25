@@ -7,12 +7,12 @@ function AuthLayout(){
             <Stack>
                 <Stack.Screen
                     name="signin"
-                    options={{headerShown: true}}
+                    options={{headerShown: false}}
                 />
 
                 <Stack.Screen
                     name="signup"
-                    options={{headerShown: true}}
+                    options={{headerShown: false}}
                     />
             </Stack>
         </>

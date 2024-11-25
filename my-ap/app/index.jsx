@@ -12,7 +12,7 @@ function App() {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
                 <View style={styles.container}
-                className="gap-8">
+                className="gap-5">
                    <View className="justify-center items-center gap-5">
                     <Image
                         style={styles.logo}
@@ -26,17 +26,19 @@ function App() {
                         style={styles.logoSmall}
                         source={images.logoSmall}
                     />
-
+                    <Text className="text-2xl font-pbold w-[90vw]">Digital Connectivity in your fingertip!</Text>
+                    <Text className="text-center w-[90vw] text-gray font-pregular">
+                        Buy Airtime, Top Up Data, Pay Bill or
+                        subscribe cables with ease and comfort.</Text>
                     <CustomButton
                     title="Continue to Sign-in"
-                    containerStyle={`w-80`}
+                    containerStyle={`w-[90vw]`}
                     onPress={() => { router.push("/signin")}}
                     />
 
                 </View>
 
             </ScrollView>
-
         </SafeAreaView>
     );
 }
@@ -57,8 +59,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     logo: {
-        height: 130,
-        width: 130,
+        height: 100,
+        width: 100,
         borderRadius: 65, // Rounded full requires half of the width or height for the border radius
         shadowColor: Colors.primary.DEFAULT,
         shadowOffset: { width: 0, height: 2 },
@@ -67,8 +69,8 @@ const styles = StyleSheet.create({
         elevation: 5, // Adds shadow effect for Android
     },
     logoSmall: {
-        height: 220,
-        width: 300,
+        height: 180,
+        width: 260,
     }
 });
 
