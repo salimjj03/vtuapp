@@ -1,13 +1,25 @@
 import React, {useState} from "react";
 import {View, Text, StyleSheet, ScrollView,
-    Image} from "react-native";
+    Image, Alert} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context"
 import FormField from "@/components/formField"
 import CustomButton from "@/components/customButton"
 import images from "@/constants/images"
 import {Colors} from "@/constants/Colors"
-import {Link} from "expo-router"
+import {Link, router} from "expo-router"
+import axios from "axios"
+import {config} from "@/config"
+import * as SecureStore from "expo-secure-store"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
+const setSecureStore = async (name, data) => {
+    try{
+        await AsyncStorage.setItem(name, data);
+        console.log("stored");
+        } catch (error) {
+            console.error(error)
+            }
+    }
 
 function SignIn(){
 
@@ -17,6 +29,7 @@ function SignIn(){
             password: ""
          }
         )
+
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     //const [error, setError] = useState(false)
@@ -36,7 +49,16 @@ function SignIn(){
             return
             }
         setIsLoading(true)
-        console.log(form)
+        axios.post(`${config.API_URL}/login`, form)
+        .then((res) => {
+            setIsLoading(false)
+            setSecureStore("userData", JSON.stringify(res.data))
+            router.push("/home")
+            })
+        .catch((err) => {
+            setIsLoading(false)
+            Alert.alert("Error", err?.response?.data?.message)
+            })
         }
 
     return (

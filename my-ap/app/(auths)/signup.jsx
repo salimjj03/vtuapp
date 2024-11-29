@@ -1,12 +1,15 @@
 import React, {useState} from "react";
 import {View, Text, StyleSheet, ScrollView,
-    Image} from "react-native";
+    Image, Alert} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context"
 import FormField from "@/components/formField"
 import CustomButton from "@/components/customButton"
 import images from "@/constants/images"
 import {Colors} from "@/constants/Colors"
 import {Link} from "expo-router"
+import axios from "axios"
+import {config} from "@/config"
+
 
 
 function SignUp(){
@@ -16,7 +19,7 @@ function SignUp(){
             full_name: "",
             user_name: "",
             email: "",
-            phone: "",
+            phone_no: "",
             ref_id: "",
             password: ""
          }
@@ -25,7 +28,7 @@ function SignUp(){
     const [isLoading, setIsLoading] = useState(false);
     //const [error, setError] = useState(false)
 
-    const required = ["password", "user_name"];
+    const required = ["password", "user_name", "email", "phone_no", "full_name"];
 
     function submitLogging(){
         let error = false
@@ -39,8 +42,18 @@ function SignUp(){
         if (error) {
             return
             }
+        setIsSubmitted(false)
         setIsLoading(true)
-        console.log(form)
+
+        axios.post(`${config.API_URL}/add_user`, form)
+        .then((res) => {
+            setIsLoading(false)
+            Alert.alert("Success", res?.data?.message)
+            })
+        .catch((err) => {
+            setIsLoading(false)
+            Alert.alert("Error", err?.response?.data?.message)
+            })
         }
 
     return (
@@ -117,9 +130,9 @@ function SignUp(){
 
                      <FormField
                      title="phone"
-                     value={form.phone}
+                     value={form.phone_no}
                      placeholder=" phone"
-                     onChange={(e) => setForm({...form, phone: e})}
+                     onChange={(e) => setForm({...form, phone_no: e})}
                      otherStyles=""
                      required={true}
                      isSubmitted={isSubmitted}
@@ -133,7 +146,6 @@ function SignUp(){
                      placeholder=" ref_id"
                      onChange={(e) => setForm({...form, ref_id: e})}
                      otherStyles=""
-                     required={true}
                      isSubmitted={isSubmitted}
                      labelShow={true}
                      />

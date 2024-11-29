@@ -7,17 +7,20 @@ import { HapticTab } from '@/components/HapticTab';
 import {Colors} from "../../constants/Colors"
 
 
+
 function TabLayout(){
     return (
-        <>
         <Tabs
+            //style={{ backgroundColor: "green" }}
             screenOptions={{
-            tabBarActiveTintColor: "green",
+            tabBarActiveTintColor: Colors.primary,
             tabBarInactiveTintColor: "gray",
             headerShown: false,
             tabBarStyle: {
+                //alignSelf: 'center',
                 height: 80,
-                marginBottom: 20,
+                marginBottom: 5,
+                backgroundColor: "#ffffff",
                 width: "95%",
                 marginHorizontal: "auto",
                 borderRadius: 20,
@@ -26,6 +29,7 @@ function TabLayout(){
                 flexDirection: "row",
                 alignItems: "center",
                 borderRadius: 10,
+                paddingBottom: 20
                 },
             tabBarShowLabel: false,
         }}
@@ -36,16 +40,21 @@ function TabLayout(){
                 headerShown: false,
                 tabBarIcon: ({color, focused}) => (
                     <View
+                    className=""
                      style={{
                         justifyContent: "center",
                         alignItems: "center",
+                        height: "100%",
+                        width: "200%",
                      }}>
                         <MaterialCommunityIcons
                         name={ focused ? "home-minus" : "home-minus-outline" }
-                        size={35}
+                        size={30}
                         color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT} />
                         <Text
-                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}>
+                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}
+                        style={style.text}
+                        >
                             Home
                         </Text>
                     </View>
@@ -62,13 +71,17 @@ function TabLayout(){
                      style={{
                         justifyContent: "center",
                         alignItems: "center",
+                        height: "100%",
+                        width: "200%"
                      }}>
                         <MaterialCommunityIcons
                         name={ focused ? "file-find" : "file-find-outline" }
-                        size={35}
+                        size={30}
                         color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT} />
                         <Text
-                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}>
+                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}
+                        style={style.text}
+                        >
                             History
                         </Text>
                     </View>
@@ -85,13 +98,17 @@ function TabLayout(){
                      style={{
                         justifyContent: "center",
                         alignItems: "center",
+                        height: "100%",
+                        width: "200%"
                      }}>
                         <MaterialCommunityIcons
                         name="face-agent"
-                        size={35}
+                        size={30}
                         color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT} />
                         <Text
-                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}>
+                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}
+                        style={style.text}
+                        >
                             Support
                         </Text>
                     </View>
@@ -108,30 +125,32 @@ function TabLayout(){
                      style={{
                         justifyContent: "center",
                         alignItems: "center",
+                        width: "200%"
                      }}>
                         <MaterialCommunityIcons
                         name="account"
-                        size={35} color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT} />
+                        size={30} color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT}
+                        />
                         <Text
-                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}>
+                        className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700 w-50" } `}
+                        style={style.text}
+                        >
                             Profile
                         </Text>
                     </View>
                     )
                 }}
             />
-
         </Tabs>
-        </>
         )
     }
 
 const style = StyleSheet.create({
     tabIcon: {
-       gap: 3,
+       gap: 1,
         },
     text: {
-        fontSize: 20
+        fontSize: 10
         }
     })
 export default TabLayout
