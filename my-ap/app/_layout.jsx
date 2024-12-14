@@ -1,4 +1,5 @@
 import { useFonts } from 'expo-font';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -9,6 +10,7 @@ import "../global.css"
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {Colors} from "@/constants/Colors"
 import Ionicons from '@expo/vector-icons/Ionicons';
+import {Link} from "expo-router"
 
 import GlobalProvider from "@/context/globalProvider";
 import { useColorScheme } from '@/hooks/useColorScheme';
@@ -44,8 +46,10 @@ export default function RootLayout() {
 
 
   return (
-     <GlobalProvider>
+     <GestureHandlerRootView style={{ flex: 1 }}>
+      <GlobalProvider>
       <Stack>
+        <Stack.Screen name="(user)" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auths)" options={{ headerShown: false }} />
         <Stack.Screen
@@ -59,8 +63,17 @@ export default function RootLayout() {
             headerShadowVisible: false,
             headerLeft: () => (
                                 <View className="flex flex-row gap-3 items-center w-[80vw]">
-                                    <View className="flex justify-center items-center rounded-full bg-white w-[50] h-[50]">
-                                        <Text className="font-bold text-2xl">t</Text>
+                                    <View
+                                    style={{
+                                        shadowColor: Colors.primary.DEFAULT,
+                                        shadowOffset: { width: 2, height: 2 },
+                                        shadowOpacity: 0.25,
+                                        shadowRadius: 3.84,
+                                        elevation: 5,
+                                        }}
+                                    className="flex justify-center items-center
+                                     rounded-full bg-white w-[50] h-[50]">
+                                        <Text className="font-bold text-2xl ">t</Text>
                                     </View>
                                     <View>
                                         <Text className="text-sm">Hi,  "Salim" </Text>
@@ -78,6 +91,7 @@ export default function RootLayout() {
       <StatusBar
         backgroundColor="white"
       />
-      </GlobalProvider>
+     </GlobalProvider>
+  </GestureHandlerRootView>
   );
 }

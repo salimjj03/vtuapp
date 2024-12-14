@@ -1,5 +1,6 @@
 import React from "react"
-import {View, Text, Image, StyleSheet, TouchableOpacity} from "react-native"
+import {View, Text, Image, StyleSheet, TouchableOpacity,
+    ActivityIndicator} from "react-native"
 import {Colors} from "../constants/Colors"
 function CustomButton({isLoading, containerStyle, title, onPress, textStyle}){
     return (
@@ -11,7 +12,9 @@ function CustomButton({isLoading, containerStyle, title, onPress, textStyle}){
             min-h-[55] rounded-lg ${containerStyle} ${isLoading ? "opacity-50" : ""}`}
         disabled={isLoading}
         >
-            <Text style={style.text} className={`textStyle`}> {title} </Text>
+            <Text style={style.text} className={`text-lg ${textStyle}`}>
+                {isLoading ? <ActivityIndicator color="white" size="large"/> : title}
+            </Text>
         </TouchableOpacity>
         )
     }

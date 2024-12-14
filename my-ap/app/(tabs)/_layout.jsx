@@ -1,14 +1,18 @@
-import React from "react";
+import React, {useContext} from "react";
 import {View, Platform, Text, StyleSheet, Image} from "react-native";
-import {Tabs} from "expo-router";
+import {Tabs, Redirect} from "expo-router";
 import Icon from "../../constants/icons";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { HapticTab } from '@/components/HapticTab';
 import {Colors} from "../../constants/Colors"
-
+import {GlobalContext} from "@/context/globalProvider";
 
 
 function TabLayout(){
+
+    const { isLogIn, isLoading } = useContext(GlobalContext);
+    if (!isLogIn && !isLoading) return <Redirect href="/signin"/>
+
     return (
         <Tabs
             //style={{ backgroundColor: "green" }}
@@ -17,19 +21,9 @@ function TabLayout(){
             tabBarInactiveTintColor: "gray",
             headerShown: false,
             tabBarStyle: {
-                //alignSelf: 'center',
-                height: 80,
-                marginBottom: 5,
+                height: 60,
                 backgroundColor: "#ffffff",
-                width: "95%",
-                marginHorizontal: "auto",
-                borderRadius: 20,
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "row",
-                alignItems: "center",
-                borderRadius: 10,
-                paddingBottom: 20
+                paddingTop: 10
                 },
             tabBarShowLabel: false,
         }}
@@ -44,13 +38,15 @@ function TabLayout(){
                      style={{
                         justifyContent: "center",
                         alignItems: "center",
-                        height: "100%",
-                        width: "200%",
+                       // height: "100%",
+                       // width: "200%",
                      }}>
                         <MaterialCommunityIcons
                         name={ focused ? "home-minus" : "home-minus-outline" }
                         size={30}
-                        color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT} />
+                        color={focused ? Colors.primary.DEFAULT : Colors.gray.DEFAULT}
+                         />
+
                         <Text
                         className={`${focused ? "font-psemibold text-primary" : "font-pregular text-gray-700" } `}
                         style={style.text}

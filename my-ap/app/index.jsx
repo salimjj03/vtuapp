@@ -12,7 +12,7 @@ function App() {
 
     const { isLogIn, isLoading } = useContext(GlobalContext);
 
-    if (isLogIn && !isLoading) return <Redirect href="home"/>
+    if (isLogIn && !isLoading) return <Redirect href="confirmLogin"/>
 
     return (
         <SafeAreaView style={styles.safeArea}>
@@ -61,13 +61,12 @@ const styles = StyleSheet.create({
         width: "100%",
         justifyContent: "center",
         alignItems: "center",
-        //gap: 10, // Gap is not supported in older React Native versions. Use margins or paddings if necessary.
         flex: 1,
     },
     logo: {
         height: 100,
         width: 100,
-        borderRadius: 65, // Rounded full requires half of the width or height for the border radius
+        borderRadius: 65,
         shadowColor: Colors.primary.DEFAULT,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,

@@ -11,6 +11,11 @@ function AuthLayout(){
                 />
 
                 <Stack.Screen
+                    name="confirmLogin"
+                    options={{headerShown: false}}
+                />
+
+                <Stack.Screen
                     name="signup"
                     options={{headerShown: false}}
                     />

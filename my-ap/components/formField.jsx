@@ -11,7 +11,9 @@ function FormField({labelShow, title, onChange, value,
 
     return (
         <View className={`${otherStyles}`}>
+            { labelShow &&
             <Text className="text-base text-xs p-1 font-pmedium"> { labelShow && title} </Text>
+            }
             <View className="">
                 <TextInput
                     className={`h-14 bg-gray-200  font-pregular text-base

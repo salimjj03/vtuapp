@@ -1,6 +1,7 @@
 import React, {useState, useEffect, createContext} from "react"
 import {getItemAsync} from "expo-secure-store"
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {getItem} from "@/components/localStorage"
 
 export const GlobalContext = createContext();
 
@@ -11,10 +12,12 @@ const GlobalProvider = ({children}) => {
 
     useEffect(() => {
         setIsLoading(true);
-        currentUser()
+        getItem("userData")
         .then((res) => {
-            setUser(JSON.parse(res));
-            setIsLogIn(true)
+            if (res !==  null) {
+                setUser(JSON.parse(res));
+                setIsLogIn(true)
+                }
             })
         .catch((err) => {
             console.log("error!!");
@@ -23,21 +26,6 @@ const GlobalProvider = ({children}) => {
             setIsLoading(false);
             })
         }, [])
-
-    const currentUser = async () => {
-        try {
-            let userData = await AsyncStorage.getItem("userData");
-            if (userData) {
-                console.log(userData)
-                }
-            else {
-                console.log("user not")
-                }
-            return userData;
-        } catch (error) {
-            console.log(error)
-            }
-        }
 
     return(
         <GlobalContext.Provider

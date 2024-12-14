@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, ScrollView,
     Image, Alert} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context"
@@ -11,16 +11,9 @@ import axios from "axios"
 import {config} from "@/config"
 import * as SecureStore from "expo-secure-store"
 import AsyncStorage from "@react-native-async-storage/async-storage"
-
-const setSecureStore = async (name, data) => {
-    try{
-        await AsyncStorage.setItem(name, data);
-        console.log("stored");
-        } catch (error) {
-            console.error(error)
-            }
-    }
-
+import {setItem} from "@/components/localStorage";
+import {GlobalContext} from "@/context/globalProvider"
+import CustomAlert from "@/components/customAlert"
 function SignIn(){
 
     const [form, setForm] = useState(
@@ -32,7 +25,9 @@ function SignIn(){
 
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    //const [error, setError] = useState(false)
+    const {setUser, setIsLogIn} = useContext(GlobalContext);
+    const [response, setResponse] = useState(null);
+    const [error, setError] = useState(false);
 
     const required = ["password", "user_name"];
 
@@ -51,18 +46,29 @@ function SignIn(){
         setIsLoading(true)
         axios.post(`${config.API_URL}/login`, form)
         .then((res) => {
-            setIsLoading(false)
-            setSecureStore("userData", JSON.stringify(res.data))
+            setIsLoading(false);
+            setUser(res.data);
+            setItem("userData", JSON.stringify(res.data))
+            setIsLogIn(true);
             router.push("/home")
             })
         .catch((err) => {
             setIsLoading(false)
-            Alert.alert("Error", err?.response?.data?.message)
+            setError(true)
+            setResponse({status: "error", message: err?.response?.data?.message})
             })
         }
 
     return (
         <SafeAreaView className="h-full">
+            { error && (
+            <CustomAlert
+            title={response?.status}
+            response={response.message}
+            onClose={() => setError(false)}
+            />
+            )
+            }
             <ScrollView
             contentContainerStyle={{
                 justifyContent: "center",
@@ -74,7 +80,6 @@ function SignIn(){
                 <Image
                 source={images.logo}
                 style={{
-
                     width: 100,
                     height: 100,
                     shadowColor: Colors.primary.DEFAULT,
@@ -104,7 +109,7 @@ function SignIn(){
                      value={form.user_name}
                      placeholder=" User name"
                      onChange={(e) => setForm({...form, user_name: e})}
-                     otherStyles=""
+                     otherStyles="my-4"
                      required={true}
                      isSubmitted={isSubmitted}
                      />
@@ -116,6 +121,7 @@ function SignIn(){
                      onChange={(e) => setForm({...form, password: e})}
                      required={true}
                      isSubmitted={isSubmitted}
+                     //otherStyles="mb-[2]"
                      />
 
                      <CustomButton

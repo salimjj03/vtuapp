@@ -5,5 +5,11 @@ import path from "../assets/images/path.png";
 import logo from "../assets/images/logo.png";
 import logoSmall from "../assets/images/logo-small.png";
 import empty from "../assets/images/empty.png";
+import mtn from "../assets/images/mtn.png";
+import glo from "../assets/images/glo.png";
+import nmobile from "../assets/images/9mobile.png";
+import airtel from "../assets/images/airtel.png";
 
-export default { profile, thumbnail, cards, path, logo, logoSmall, empty };
+export default { profile, thumbnail, cards,
+                path, logo, logoSmall, empty,
+                mtn, nmobile, glo, airtel};
