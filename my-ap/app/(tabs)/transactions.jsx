@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef,
     useContext, useMemo} from "react";
-import {View, Text, Image, StyleSheet, FlatList} from "react-native";
+import {View, Text, Image, StyleSheet, FlatList,
+    TouchableOpacity} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context";
 import axios from "axios";
 import { handleLogout } from "@/components/logout"
@@ -14,12 +15,15 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import { Picker } from '@react-native-picker/picker';
 import {Colors} from "@/constants/Colors"
 import TransactionHistory from "@/components/transactionHistory"
+import {useRouter} from "expo-router"
+
 
 
 const Transactions = () => {
 
-    const {user, setIsLogIn} = useContext(GlobalContext)
-    const [transactions, setTransactions] = useState(null);
+    const router = useRouter();
+    const {user, setIsLogIn} = useContext(GlobalContext);
+    const [transactions, setTransactions] = useState([]);
     const [searchValue, setSearchValue] = useState([])
     const [query, setQuery] = useState("")
     const [loading, setLoading] = useState(false);
@@ -59,7 +63,7 @@ const Transactions = () => {
 
     const onSearch = (query) => {
         setQuery(query)
-        const filtered =  transactions.filter(
+        const filtered =  transactions?.filter(
             (item) => item.t_disc.toLowerCase().includes(query.toLowerCase()) ||
             item.status.toLowerCase().includes(query.toLowerCase())
 
@@ -73,26 +77,37 @@ const Transactions = () => {
     style={styles.container}
     >
 
-       <View className="flex-1 w-[90vw] gap-3 bg-red-500 mt-4">
-           <FormField
-                placeholder={"Search Record..."}
-                value={query}
-                onChange={onSearch}
-           />
-           <View>
-                <FlatList
-                    data={searchValue}
-                    renderItem={ ({item}) => (
+       <View className="flex-1 w-[95vw] gap-3 mt-4">
+           <View className="p-4 bg-white rounded-lg m-1">
+               <View className="h-8 flex-row justify-between">
+                   <Text className="font-thin">Total</Text>
+                   <Text className="font-semibold">{searchValue.length}</Text>
+               </View>
+               <FormField
+                    placeholder={" Search Record..."}
+                    value={query}
+                    onChange={onSearch}
+               />
+           </View>
+
+            <FlatList
+                data={searchValue}
+                renderItem={ ({item}) => (
+                    <TouchableOpacity
+                    onPress= {() => router.push(`/transaction/${item.id}`)}
+                    className="m-1"
+                    >
                         <TransactionHistory
                             amount={item?.amount}
                             description={item?.t_disc}
                             date={item?.t_date}
                             status={item?.status}
+                            type={item?.t_type}
                         />
-                        )}
-                    keyExtractor={ (item) => item.id}
-                />
-           </View>
+                    </TouchableOpacity>
+                    )}
+                keyExtractor={ (item) => item.id}
+            />
        </View>
     </SafeAreaView>
   );

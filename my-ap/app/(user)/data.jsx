@@ -163,7 +163,7 @@ const App = () => {
                 plan[`user${user.type[user.type.length - 1]}_price`])
             )
         setSelectedPlanName(plan?.plan_name)
-        bottomSheetRef.current.snapToIndex(1)
+        bottomSheetRef.current.snapToIndex(2)
         }
 
     const handleSuccessVerification = () => {

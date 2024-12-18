@@ -1,87 +1,57 @@
 import React, { useState } from "react";
-import {
-  View,
-  Button,
-  Alert,
-  FlatList,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  Modal,
-  StyleSheet,
-} from "react-native";
-import * as Contacts from "expo-contacts";
-import Contact from "@/components/contact"
+import { View, Text, ScrollView, TouchableOpacity} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context"
+import {Colors} from "@/constants/Colors"
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Fontisto from '@expo/vector-icons/Fontisto';
+import Email from "@/components/email"
+import Whatsapp from "@/components/whatsapp"
+import PhoneCall from "@/components/phoneCall"
+import WhatsAppCommunity from "@/components/whatsappcommunity"
 
-export default function App() {
+
+export default function Support() {
 
   const [modalVisible, setModalVisible] = useState(false); // Modal visibility
   const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
 
   return (
-    <View style={styles.container}>
-      {/* Form Field */}
-      <TextInput
-        style={styles.textInput}
-        placeholder="Selected Phone Number"
-        value={selectedPhoneNumber}
-        editable={false}
-      />
+    <SafeAreaView
+        style={{ flex: 1, backgroundColor: Colors.background.DEFAULT}}
+    >
+        <ScrollView
+            showsVerticalScrollIndicator = {false}
+            showsHorizontalScrollIndicator ={false}
+            contentContainerStyle={{
+            flexGrow: 1,
+             gap: 15,
+             padding: 15
+             }}
+        >
+            <Text className="font-thin mt-2">Chart</Text>
+            <View className=" rounded-xl bg-white p-2">
 
-      <Contact
-      modalVisible={modalVisible}
-      setModalVisible={setModalVisible}
-      selectedPhoneNumber={setSelectedPhoneNumber}
-      setSelectedPhoneNumber={setSelectedPhoneNumber}
-      />
-    </View>
+                <Whatsapp />
+
+                <WhatsAppCommunity />
+            </View>
+
+             <Text className="font-thin mt-2">Call</Text>
+             <View className="rounded-xl bg-white p-2">
+                <PhoneCall
+                phone="+234 803 376 0736"
+                />
+
+                <PhoneCall
+                phone="+234 902 093 4923"
+                />
+             </View>
+
+             <Text className="font-thin mt-2">Email</Text>
+             <View className="rounded-xl bg-white p-2">
+                <Email/>
+             </View>
+        </ScrollView>
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    justifyContent: "center",
-  },
-  textInput: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    marginBottom: 20,
-    borderRadius: 5,
-  },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-  },
-  modalContainer: {
-    width: "90%",
-    backgroundColor: "#fff",
-    borderRadius: 10,
-    padding: 20,
-    maxHeight: "80%",
-  },
-  searchInput: {
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 10,
-    marginBottom: 10,
-    borderRadius: 5,
-  },
-  contactItem: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderColor: "#ddd",
-  },
-  contactName: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  contactPhone: {
-    fontSize: 14,
-    color: "gray",
-  },
-});

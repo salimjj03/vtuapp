@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, ScrollView, Image,
     FlatList, TouchableOpacity, ActivityIndicator } from "react-native";
 import { GlobalContext } from "@/context/globalProvider";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Stack, Link } from "expo-router";
+import { Stack, Link, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import {Colors} from "@/constants/Colors"
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -21,6 +21,7 @@ import {handleLogout} from "@/components/logout";
 
 
 function Home() {
+    const router = useRouter()
     const {setIsLogIn} = useContext(GlobalContext);
     const { user } = useContext(GlobalContext);
     const [isVisible, setIsVisible] = useState(true);
@@ -272,12 +273,18 @@ function Home() {
                     data={transactions}
                     keyExtractor={item => item.id}
                     renderItem={ ({item}) => (
-                        <TransactionHistory
-                        amount={item?.amount}
-                        description={item?.t_disc}
-                        date={item?.t_date}
-                        status={item?.status}
-                        />
+                        <TouchableOpacity
+                        //onPress= {() => router.push(`/transaction/${JSON.stringify(item)}`)}
+                        onPress= {() => router.push(`/transaction/${item.id}`)}
+                        >
+                            <TransactionHistory
+                            amount={item?.amount}
+                            description={item?.t_disc}
+                            date={item?.t_date}
+                            status={item?.status}
+                            type={item?.t_type}
+                            />
+                        </TouchableOpacity>
                         )}
 
                     />

@@ -52,6 +52,7 @@ export default function RootLayout() {
         <Stack.Screen name="(user)" options={{ headerShown: false }} />
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auths)" options={{ headerShown: false }} />
+        <Stack.Screen name="transaction/[id]" options={{ title: "Transaction" }} />
         <Stack.Screen
         name="(tabs)"
         options={{
