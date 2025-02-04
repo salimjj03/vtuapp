@@ -12,11 +12,13 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import {handleLogout} from "@/components/logout"
 import {GlobalContext} from "@/context/globalProvider";
+import CustomAlert from "@/components/customAlert"
 
 export default function App() {
     const [pin, setPin] = useState(['', '', '', '']);
     const inputs = useRef([]);
-    const {setIsLogIn} = useContext(GlobalContext);
+    const {setIsLogIn, user} = useContext(GlobalContext);
+    const [error, setError] = useState(false);
 
     const handleChange = (value, index) => {
         const newPin = [...pin];
@@ -31,11 +33,11 @@ export default function App() {
                 Keyboard.dismiss(); // Hide the keyboard when the last input is filled
                 const p = pin.toString().replaceAll(",", "") + value;
                 //console.log(p)
-                if (p === "1234") {
+                if (p == user?.pin) {
                     router.push("/home")
                     } else {
                         setPin(['', '', '', ''])
-                        Alert.alert("Error", "Invalid Pin")
+                        setError(true)
                         }
             }
         }
@@ -62,7 +64,14 @@ export default function App() {
         <SafeAreaView
         className="h-screen items-center bg-white justify-around"
         >
-
+          { error && (
+            <CustomAlert
+            title={"error"}
+            response={"Invalid Pin"}
+            onClose={() => setError(false)}
+            />
+            )
+            }
           <View className="justify-center w-[90vw] items-center gap-3">
             <View className="w-full flex-row justify-between">
                <View className="bg-white w-[50]">
@@ -99,7 +108,7 @@ export default function App() {
             source={images.logo}
             resizeMode="contain"
             />
-            <Text className="font-psemibold text-2xl">Salim JJ</Text>
+            <Text className="font-psemibold text-2xl">{user?.user_name}</Text>
           </View>
 
           <View className="items-center justify-around">

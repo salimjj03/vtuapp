@@ -1,9 +1,10 @@
 import React, { useContext} from "react";
-import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
+import { View, Text, Image, ScrollView, StyleSheet, Platform } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import {Colors} from "../constants/Colors"
 import CustomButton from "../components/customButton"
+import Web from "@/components/web"
 import {StatusBar} from "expo-status-bar"
 import {router, Redirect} from "expo-router"
 import {GlobalContext} from "@/context/globalProvider"
@@ -17,8 +18,12 @@ function App() {
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScrollView contentContainerStyle={styles.scrollContainer}>
+                { Platform.OS !== "web"  ?
                 <View style={styles.container}
-                className="gap-5">
+                className="gap-20">
+
+                   <Text className="font-psemibold text-xl">Hi, Welcome</Text>
+
                    <View className="justify-center items-center gap-5">
                     <Image
                         style={styles.logo}
@@ -26,23 +31,27 @@ function App() {
                         resizeMode="contain"
                     />
 
-                    <Text className="font-psemibold text-xl">Transact with Ease</Text>
                    </View>
-                    <Image
-                        style={styles.logoSmall}
-                        source={images.logoSmall}
-                    />
-                    <Text className="text-2xl font-pbold w-[90vw]">Digital Connectivity in your fingertip!</Text>
-                    <Text className="text-center w-[90vw] text-gray font-pregular">
-                        Buy Airtime, Top Up Data, Pay Bill or
-                        subscribe cables with ease and comfort.</Text>
+{/*                     <Image */}
+{/*                         style={styles.logoSmall} */}
+{/*                         source={images.logoSmall} */}
+{/*                     /> */}
+                    <Text className="text-center w-[90vw] text-grady font-psemibold text-center">
+                        The Best and Cheapest Application for your Data, Airtime, Electricity Bills,
+                        Cable Subscriptions and other VTU Services
+                   </Text>
+{/*                     <Text className="text-center w-[90vw] text-gray font-pregular"> */}
+{/*                         Buy Airtime, Top Up Data, Pay Bill or */}
+{/*                         subscribe cables with ease and comfort.</Text> */}
                     <CustomButton
                     title="Continue to Sign-in"
-                    containerStyle={`w-[90vw]`}
+                    containerStyle={`w-[90vw] bg-primary`}
                     onPress={() => { router.push("/signin")}}
                     />
 
                 </View>
+                :
+                <View><Web /></View>}
 
             </ScrollView>
         </SafeAreaView>

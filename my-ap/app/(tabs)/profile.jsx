@@ -14,20 +14,20 @@ import CustomBottomSheet from "@/components/customBottomSheet"
 import Pin from "@/components/pin"
 import { useFocusEffect } from '@react-navigation/native';
 
-
-
-
 const Profile = () => {
 
     const ref = useRef()
     const {user, setIsLogIn} = useContext(GlobalContext)
     const [isVerified, setIsVerified] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleClose = () => {
+        setIsOpen(false)
         ref.current.close()
         }
 
     const handleSuccessVerification = () => {
+        setIsOpen(false)
         ref.current.close()
         router.replace("/profileUpdate")
         }
@@ -46,7 +46,7 @@ const Profile = () => {
                 padding: 20
              }}
         >
-            <View className="my-5 gap-4 items-center">
+            <View className="my-2 gap-4 items-center">
                 <View className="h-[70] w-[70] items-center justify-center bg-white rounded-full">
                     <Text className="text-5xl uppercase text-primary">{user?.user_name[0]}</Text>
                 </View>
@@ -75,8 +75,12 @@ const Profile = () => {
 
                 <CustomButton
                     title="Manage security"
-                    onPress={() => ref.current.snapToIndex(1)}
-                    containerStyle="m-6 mb-2"
+                    onPress={() => {
+                        setIsOpen(true)
+                        ref?.current?.snapToIndex(2)
+                         }
+                        }
+                    containerStyle="m-6 mb-2 bg-primary"
                 />
             </View>
 
@@ -135,6 +139,7 @@ const Profile = () => {
                 </TouchableOpacity>
             </View>
         </ScrollView>
+        { isOpen &&
         <CustomBottomSheet
             title={"Verify"}
             ref={ref}
@@ -156,6 +161,7 @@ const Profile = () => {
                 </View>
             }
         />
+        }
     </SafeAreaView>
   );
 };

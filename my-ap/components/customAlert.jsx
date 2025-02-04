@@ -3,9 +3,21 @@ import {View, Text, Modal} from "react-native";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import CustomButton from "@/components/customButton"
 import {Colors} from "@/constants/Colors"
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 
-const CustomAlert = ({title, response, onClose}) => {
+const CustomAlert = ({title, response, onClose,
+    secondTitle, secondOnClose}) => {
+
+    const handleStatus = (title) => {
+        if (title === "success" || title === true || title === "true" ||
+            title === "successful" || title === "successfully" || title == 200 || title == 201) {
+                return true
+                } else {
+                    return false
+                    }
+        }
+
     return (
         <Modal
         visible={true}
@@ -22,17 +34,29 @@ const CustomAlert = ({title, response, onClose}) => {
             className="min-h-[220] w-[80vw] rounded-lg
             bg-white p-3 justify-center items-center gap-2"
             >
-                <AntDesign name={`${title === "error" ? "closecircle" : "checkcircle"}` }
+                { title === "Notification" ?
+                <Ionicons name="notifications-circle-outline" size={80} color={Colors.primary.DEFAULT} /> :
+
+                <AntDesign name={`${ !handleStatus(title) ? "closecircle" : "checkcircle"}` }
                 size={60}
-                color={`${title === "error" ? "red" : Colors.primary.DEFAULT}` }
+                color={`${ !handleStatus(title) ? "red" : Colors.primary.DEFAULT}` }
                 />
-                <Text className="font-psemibold text-lg">{title}</Text>
-                <Text className="font-pregular text-lg text-center">{response}</Text>
+                }
+                { title && <Text className="font-psemibold text-lg">{title}</Text>}
+                { response && <Text className="font-pregular text-lg text-center">{response}</Text> }
                 <CustomButton
                 title="Close"
-                containerStyle="w-[200]"
+                containerStyle="w-[200] bg-primary"
                 onPress={onClose}
                 />
+
+                { handleStatus(title) && secondTitle &&
+                <CustomButton
+                title={secondTitle}
+                containerStyle="w-[200] bg-primary"
+                onPress={secondOnClose}
+                />
+                }
 
             </View>
             </View>

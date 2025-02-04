@@ -23,12 +23,18 @@ const ProfileUpdate = () => {
     const [response, setResponse ] = useState(null)
     const [isSubmitted, setIsSubmitted] = useState(false)
 
-
     const handlePinUpdate = (type) => {
         setIsSubmitted(true)
         if (type === "pin") {
-             if (pin.length != 4 && pin.length > 0) {
+             if (pin.length != 4) {
                 setResponse({status: "error", message: "Pin must be 4 digit"})
+                return
+            }
+        }
+
+        if (type === "password") {
+             if (password.length < 4) {
+                setResponse({status: "error", message: "Password too small"})
                 return
             }
         }
@@ -44,7 +50,11 @@ const ProfileUpdate = () => {
             setResponse(res?.data)
             setLoading(false)
             setIsSubmitted(false)
-            setUser( (u) => ({...u, pin: pin}) )
+            setPin("")
+            setPassword("")
+            if (type === "pin") {
+                setUser( (u) => ({...u, pin: pin}) )
+            }
             })
         .catch( (err) => {
             if (err?.response?.status === 401){
@@ -71,21 +81,18 @@ const ProfileUpdate = () => {
 
   return (
     <SafeAreaView
-    className="flex-1 bg-background m-4"
+    className="flex-1 bg-background"
     >
-{/*         <ScrollView */}
-{/*             showsVerticalScrollIndicator = {false} */}
-{/*             showsHorizontalScrollIndicator ={false} */}
-{/*             contentContainerStyle={{ */}
-{/*                 alignItems: "center", */}
-{/*                 flexGrow: 1, */}
-{/*                 gap: 10, */}
-{/*                 padding: 20 */}
-{/*              }} */}
-{/*         > */}
-            <View className="">
+            <View className=" m-4">
+                { response && (
+                <CustomAlert
+                title={response?.status}
+                response={response?.message}
+                onClose={handleClose}
+                />
+                )}
                 <View className="bg-white p-4 my-4 gap-3 rounded-xl gap-4">
-                    <Text>Change Pin</Text>
+                    <Text className="font-pregular ">Change Pin</Text>
                     <FormField
                     keyboardType={"numeric"}
                     onChange={(e) => setPin(e)}
@@ -100,24 +107,25 @@ const ProfileUpdate = () => {
                     />
                 </View>
 
-                <View className="bg-white p-4 my-4 gap-3">
-                    <FormField />
-                    <CustomButton />
+                <View className="bg-white p-4 my-4 gap-3 rounded-xl gap-4">
+                    <Text className="font-pregular ">Change Password</Text>
+                    <FormField
+                    onChange={(e) => setPassword(e)}
+                    value={password}
+                    title="Password"
+                    required={true}
+                    isSubmitted={isSubmitted}
+                    />
+                    <CustomButton
+                    title={"Change Password"}
+                    onPress={ () => handlePinUpdate("password")}
+                    />
                 </View>
             </View>
-{/*         </ScrollView> */}
-    { response && (
-    <CustomAlert
-    title={response?.status}
-    response={response?.message}
-    onClose={handleClose}
-    />
-    )}
-{/*     { loading  && ( */}
+
     <Loading
         loading={loading}
     />
-{/*     )} */}
     </SafeAreaView>
   );
 };

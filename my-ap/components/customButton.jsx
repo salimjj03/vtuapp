@@ -8,7 +8,7 @@ function CustomButton({isLoading, containerStyle, title, onPress, textStyle}){
         activeOpacity={0.7}
         onPress={onPress}
         style={style.buttonOpacity}
-        className={`items-center justify-center bg-primary
+        className={`items-center justify-center
             min-h-[55] rounded-lg ${containerStyle} ${isLoading ? "opacity-50" : ""}`}
         disabled={isLoading}
         >
@@ -24,7 +24,7 @@ const style=StyleSheet.create({
 
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: Colors.primary.DEFAULT,
+        //backgroundColor: Colors.primary.DEFAULT,
         shadowColor: Colors.primary.DEFAULT,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,

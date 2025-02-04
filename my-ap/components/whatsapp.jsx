@@ -29,7 +29,7 @@ const WhatsApp = () => {
 
         <View className="gap-2">
             <Text className="font-semibold">Whatsapp Chat</Text>
-            <Text className="regular">Star a conversation with agent</Text>
+            <Text className="regular text-wrap">Chart with an agent </Text>
         </View>
      </TouchableOpacity>
   );

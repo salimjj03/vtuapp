@@ -1,6 +1,6 @@
 import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, ScrollView,
-    Image, Alert} from "react-native";
+    Image} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context"
 import FormField from "@/components/formField"
 import CustomButton from "@/components/customButton"
@@ -50,7 +50,7 @@ function SignIn(){
             setUser(res.data);
             setItem("userData", JSON.stringify(res.data))
             setIsLogIn(true);
-            router.push("/home")
+            router.replace("/home")
             })
         .catch((err) => {
             setIsLoading(false)
@@ -129,6 +129,7 @@ function SignIn(){
                      title="Login"
                      onPress={submitLogging}
                      isLoading={isLoading}
+                     containerStyle="bg-primary my-4"
                      />
                 </View>
 

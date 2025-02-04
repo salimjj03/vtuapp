@@ -6,7 +6,7 @@ import {Link} from "expo-router"
 const Icon = ({icon, title, link}) => {
     return (<>
         <View
-            className="flex justify-center  gap-2 items-center w-[70]">
+            className="flex justify-center  gap-2 items-center w-[95]">
                 <Link href={link}>
                 <View
                 style={{

@@ -1,69 +1,76 @@
 import React, { useCallback, useMemo, forwardRef } from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import BottomSheet, {
-  BottomSheetBackdrop,
-  BottomSheetScrollView,
-} from '@gorhom/bottom-sheet';
-import { Colors } from '@/constants/Colors';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+
+import BottomSheet, { BottomSheetView, BottomSheetTextInput,
+    BottomSheetBackdrop, BottomSheetScrollView  } from '@gorhom/bottom-sheet';
+import Pin from "@/components/pin"
+import {Colors} from "@/constants/Colors"
 
 const App = forwardRef((props, ref) => {
   // ref
-  const bottomSheetRef = ref || React.createRef();
+  const bottomSheetRef = ref;
 
-  // snap points
-  const snapPoints = useMemo(() => ['20%', '45%', '70%'], []);
+  // variables
+  const snapPoints = useMemo(() => ["30%", "45", "70%", "90"], []);
 
-  // Render custom backdrop
-  const renderBackdrop = useCallback(
-    (backdropProps) => (
-      <BottomSheetBackdrop
-        {...backdropProps}
-        disappearsOnIndex={-1}
-        appearsOnIndex={0}
-        pressBehavior="none"
-        opacity={0.5}
-        style={StyleSheet.absoluteFillObject} // Fullscreen backdrop
-      />
-    ),
-    []
-  );
+    const renderBackdrop = useCallback(
+		(props) => (
+			<BottomSheetBackdrop
+				{...props}
+				disappearsOnIndex={-1}
+				appearsOnIndex={0}
+				pressBehavior="none"
+				opacity={0.5}
+			/>
+		),
+		[]
+	);
 
-  // Handle sheet changes
+  // callbacks
   const handleSheetChanges = useCallback((index) => {
     console.log('handleSheetChanges', index, bottomSheetRef);
   }, []);
 
-  // Render component
+  // renders
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         snapPoints={snapPoints}
+//         keyboardBehavior="interactive"
+//         keyboardBlurBehavior="restore"
         keyboardBehavior="fillParent"
         enableDynamicSizing={false}
         backdropComponent={renderBackdrop}
         enablePanDownToClose={false}
       >
-        <ScrollView contentContainerStyle={styles.contentContainer}>
-          {props.title && (
-            <Text className="font-pregular text-2xl">{props.title}</Text>
-          )}
-          {props.components}
-        </ScrollView>
+         <View style={styles.contentContainer}>
+             {props.title &&
+                 <Text className="font-pregular text-2xl"> {props.title} </Text>
+                 }
+             {props.components}
+        </View>
       </BottomSheet>
-    </GestureHandlerRootView>
   );
 });
 
 const styles = StyleSheet.create({
   contentContainer: {
-    flexGrow: 1,
+   flexGrow: 1,
     padding: 16,
     backgroundColor: Colors.background.DEFAULT,
-    alignItems: 'center',
+    alignItems: "center",
+
+  },
+  input: {
+    marginTop: 8,
+    marginBottom: 10,
+    borderRadius: 10,
+    fontSize: 16,
+    lineHeight: 20,
+    padding: 8,
+    backgroundColor: 'rgba(151, 151, 151, 0.25)',
   },
 });
 
-export default App;
+export default App

@@ -22,121 +22,63 @@ import {Link, router} from "expo-router"
 
 const App = () => {
     const [networks, setNetworks] = useState([]);
-    const [networksData, setNetworksData] = useState(null)
     const [selectedValue, setSelectedValue] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null)
     const [isVerified, setIsVerified] = useState(false);
     const [isLoadingRequest, setIsLoadingRequest] = useState(false)
-    const [plan, setPlan] = useState(null);
-    const [validator, setValidator] = useState(true);
-    const [phone, setPhone] = useState("");
+    const [amount, setAmount] = useState("");
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [response, setResponse] = useState(null);
     const [modalVisible, setModalVisible] = useState(false); // Modal visibility
-    const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
     const [isVisible, setIsVisible] = useState(true);
-    const [balance, setBalance] = useState(null);
-    const [selectedPlanAmount, setSelectedPlanAmount] = useState(0);
-    const [selectedPlanName, setSelectedPlanName] = useState(null);
-    const [error, setError] = useState(null);
-    const [refresh, setRefresh] = useState(false)
+    const [balance, setBalance] = useState(0);
+    const [error, setError] = useState(false);
+    const [cable, setCable] = useState({})
+    const [sameType, setSameType] = useState(null)
 
-    const [planTypes, setPlanType] = useState([]);
-    const [selectedType, setSelectedType] = useState(null);
-    const sameType = useMemo( () => {
-        const filterTypes = planTypes?.filter(
-            (item) => item.network_id == selectedValue
-             )
-        setSelectedType(s => filterTypes[0]?.id || null)
-        return filterTypes
-        }, [selectedValue] )
-    const [openType, setOpenType] = useState(false);
-    const [typeValue, setTypeValue] = useState(null)
-
-    const [plans, setPlans] = useState(null);
-    const samePlans = useMemo( () => {
-        const filterPlans = plans?.filter(
-            (item) => item.plan_t == selectedType
-             )
-        return filterPlans
-        }, [selectedType, selectedValue] )
     const [loading, setLoading] = useState(false)
     const { user, setIsLogIn } = useContext(GlobalContext);
     const bottomSheetRef = useRef(null);
-    const networksRef = useRef(52)
-
-    let formatedBalance = new Intl.NumberFormat(
-        "en-NG",
-        {style: "currency", currency: "NGN" })
-        .format(balance)
-
-    useEffect( () => {
-        if (networks && phone.length >= 4) {
-            for (const network of networksData) {
-                if (JSON.parse(network?.network_codes)?.codes?.includes(phone.slice(0, 4))) {
-                    setSelectedValue(network?.network_id)
-                    return
-                    }
-                }
-            }
-        }, [phone])
+    const [refresh, setRefresh] = useState(false)
+    const [cardNumber, setCardNumber] = useState("")
+    const [isValidated, setIsValidated] = useState(false)
+    const [name, setName] = useState("")
+    const [plan, setPlan] = useState("")
 
     useEffect( () => {
-        setPhone("")
-        setError(false)
+        setSameType(s => cable[selectedValue])
+        }, [selectedValue])
+
+    useEffect( () => {
+        setSameType(null)
         if (!user) {
             return
             } else {
             const fetchData = async () => {
                 setLoading(true)
+                setError(false)
                 try{
-                      const [networkData, typeData, planData, userBalance] = await Promise.all([
-                            axios.get(`${config.API_URL}/networks`, {
-                                headers: {
-                                "Authorization": `Bearer ${user.token}`
-                                }
-                            }),
-
-                            axios.get(`${config.API_URL}/add_plan_type`, {
-                                headers: {
-                                "Authorization": `Bearer ${user.token}`
-                                }
-                            }),
-
-                            axios.get(`${config.API_URL}/add_plan`, {
-                                headers: {
-                                "Authorization": `Bearer ${user.token}`
-                                }
-                            }),
-
-                            axios.get(`${config.API_URL}/balance`, {
-                                headers: {
+                      const [cableData] = await Promise.all([
+                            axios.get(`${config.API_URL}/cable`, {
+                            headers: {
                                 "Authorization": `Bearer ${user?.token}`
                                 }
                             })
-
                           ])
 
-                      setNetworksData(networkData.data)
-                       setNetworks(networkData?.data?.map((item) => (
+                       setNetworks(Object.keys(cableData?.data?.cables).map((item) => (
                              <Picker.Item
-                             key={item.id}
-                             label={item.name}
-                             value={item.network_id} />
+                             key={item}
+                             label={item.toUpperCase()}
+                             value={item} />
                            ))
                        )
 
-                      setBalance(userBalance?.data?.balance)
-                      setSelectedValue(networkData?.data[0]?.network_id)
-
-                      setPlanType(typeData.data)
-
-                      setPlans(planData.data)
-                      console.log(planData)
-                      console.log(typeData)
-                      console.log(networkData)
-                      console.log(userBalance)
+                      setBalance(cableData?.data?.balance)
+                      if (Object.keys(cableData?.data?.cables).length > 0) {
+                          setSelectedValue(Object.keys(cableData?.data?.cables)[0])
+                          setSameType(cableData?.data?.cables[Object.keys(cableData?.data?.cables)[0]])
+                          }
+                      setCable(cableData?.data?.cables)
 
                     } catch (err) {
                         setError(true)
@@ -144,7 +86,6 @@ const App = () => {
                             handleLogout(setIsLogIn)
                         }
                         console.log(err)
-
                         } finally {
                             setLoading(false)
                             }
@@ -155,19 +96,54 @@ const App = () => {
 
     }, [user, refresh] )
 
-    const handleDataPurchase = (plan) => {
-        if(phone === "") {
+    const handleFormatAmount = (amount) => {
+        return new Intl.NumberFormat(
+            "en-NG", {style: "currency", currency: "NGN"}).format(
+                amount
+                )
+        }
+
+    const handleValidate = (item) => {
+        if(cardNumber === "") {
             setIsSubmitted(true)
             return
             }
-        setPlan(plan)
-        setSelectedPlanAmount(
-            new Intl.NumberFormat(
-                "en-NG", {style: "currency", currency: "NGN"}).format(
-                plan[`user${user.type[user.type.length - 1]}_price`])
-            )
-        setSelectedPlanName(plan?.plan_name)
-        bottomSheetRef.current.snapToIndex(2)
+        setAmount(item.amount)
+        setPlan(item)
+        setIsLoadingRequest(true)
+        setIsVerified(true)
+        bottomSheetRef?.current?.snapToIndex(0)
+
+        const data = {
+            cardNumber: cardNumber,
+            planId: item.id
+            //type: "prepaid"
+            }
+
+        axios.post(`${config.API_URL}/cable_validation`, data, {
+            headers: {
+                "Authorization": `Bearer ${user?.token}`
+                }
+            })
+        .then( res => {
+            if (res?.data?.error){
+                setIsLoadingRequest(false)
+                setIsVerified(false)
+                setResponse({status: "error", message: res?.data?.desc})
+                bottomSheetRef.current.close()
+                return
+                }
+            setName(res?.data?.data?.name)
+            setIsLoadingRequest(false)
+            bottomSheetRef?.current?.snapToIndex(3)
+
+            })
+        .catch( err => {
+            setIsLoadingRequest(false)
+            setIsVerified(false)
+            setResponse({status: "error", message: "Invalid entry or network error"})
+            bottomSheetRef.current.close()
+            })
         }
 
     const handleSuccessVerification = () => {
@@ -175,14 +151,11 @@ const App = () => {
         setIsVerified(true)
         setIsLoadingRequest(true)
         const data = {
-            network_id: plan.net_id,
-            type: plan.plan_t,
-            plan_id: plan.plan_id,
-            validator: validator,
-            phone: phone
+            cardNumber: cardNumber,
+            planId: plan?.id,
             }
 
-        axios.post(`${config.API_URL}/buy_data`, data, {
+        axios.post(`${config.API_URL}/cable`, data, {
             headers: {
                 "Authorization": `Bearer ${user?.token}`
                 }
@@ -192,8 +165,6 @@ const App = () => {
             bottomSheetRef.current.close()
             setIsLoadingRequest(false)
             setIsVerified(true)
-            setPlan(null)
-            //router("/home")
             } )
         .catch( (err) => {
             if (err?.response?.status === 401) {
@@ -203,38 +174,35 @@ const App = () => {
                 bottomSheetRef.current.close()
                 setIsLoadingRequest(false)
                 setIsVerified(true)
-                setPlan(null)
+                setIsSubmitted(false)
                 }
             })
-
-        console.log(data)
-
         }
 
     const handleClose = () => {
-        setPlan(null)
         bottomSheetRef.current.close()
         }
 
     const handleCloseResponse = () => {
-        if (response?.status != "error") {
-            setRefresh( (r) => !r)
-        }
+        if (response?.status === true) {
+            setRefresh((r) => !r)
+            setCardNumber("")
+            }
         setResponse(null)
         }
 
+    const handleHome = () => {
+        setResponse(null)
+        router.replace("/home")
+        }
 
   return (
     <SafeAreaView
     className="bg-background"
     style={styles.container}
     >
-       <View
-        style={{
-            flex: 1,
-             gap: 10,
-             marginBottom: 10
-             }}
+        <View
+        className="flex-1 gap-3"
         >
          {
            response && (
@@ -243,7 +211,7 @@ const App = () => {
             response={response?.message}
             onClose={handleCloseResponse}
             secondTitle="Home"
-            secondOnClose= { () => router.replace("home")}
+            secondOnClose= { handleHome }
             />
             )
         }
@@ -282,7 +250,7 @@ const App = () => {
 
            <View>
                <Text className="text-2xl font-semibold">
-                   { isVisible ? `${formatedBalance}` : "*****"}
+                   { isVisible ? `${handleFormatAmount(balance)}` : "*****"}
                </Text>
            </View>
 
@@ -292,27 +260,16 @@ const App = () => {
 
         <View className="flex-row items-center gap-4 p-3 w-[90vw] bg-white rounded-lg">
            <FormField
-              otherStyles="w-[80%]"
-              onChange={(e) => setPhone( (p) => e.trim()
-                .replace(/\s+/g, "")
-                .replace(/^\+234/, "0"))
-                }
+              otherStyles="w-[100%]"
+              onChange={(e) => setCardNumber(e)}
               required={true}
               isSubmitted={isSubmitted}
-              value={phone}
-              title={"Phone number:"}
+              value={cardNumber}
+              title={"Card Number:"}
               keyboardType={"phone-pad"}
-              placeholder={" Phone number"}
+              placeholder={" Card Number"}
            />
-
-           <Contact
-              modalVisible={modalVisible}
-              setModalVisible={setModalVisible}
-              selectedPhoneNumber={phone}
-              setSelectedPhoneNumber={setPhone}
-              />
        </View>
-
        {loading || error ?
            <View className="w-[90vw] flex-row items-center mb-4 justify-center
             bg-white p-3 rounded-lg gap-3 flex-1">
@@ -334,114 +291,91 @@ const App = () => {
             />
             }
             </View> :
+
               <>
+               <View className="w-[90vw] flex-row items-center
+                bg-white p-3 rounded-lg gap-3">
 
-       <View className="w-[90vw] flex-row items-center
-        bg-white p-3 rounded-lg gap-3">
+                   <Image
+                        source={
+                            selectedValue == "MTN" ? images.mtn
+                            : selectedValue == "AIRTEL" ? images.airtel
+                            : selectedValue == "GLO" ? images.glo
+                            : selectedValue == "9MOBILE" ? images.nmobile
+                            : ""
+                            }
+                        resizeMode="contain"
+                        style={{
+                            width: 50,
+                            height: 50,
+                            }}
+                        className="rounded-full "
+                        />
 
-           <Image
-                source={
-                    selectedValue == 1 ? images.mtn
-                    : selectedValue == 2 ? images.airtel
-                    : selectedValue == 3 ? images.glo
-                    : selectedValue == 4 ? images.nmobile
-                    : ""
-                    }
-                resizeMode="contain"
-                style={{
-                    width: 50,
-                    height: 50,
-                    }}
-                className="rounded-full "
-                />
-
-       <View className="rounded-xl h-[50] w-[80%]"
-       style={{overflow: 'hidden'}}
-       >
-          <Picker
-            selectedValue={selectedValue}
-            onValueChange={(itemValue, itemIndex) => setSelectedValue(s =>  itemValue)}
-            style={{ width: "100%", height: "100%",
-                backgroundColor: Colors.background.DEFAULT,
-                padding: 10,
-                //marginLeft: 10
-                }}
-          >
-            {
-                networks && networks.length > 0?
-                networks :
-                <Picker.Item
-                label={"No available Network"}
-                value={null}
-                />
+               <View className="rounded-xl h-[50] w-[80%]"
+               style={{overflow: 'hidden'}}
+               >
+                  <Picker
+                    selectedValue={selectedValue}
+                    onValueChange={(itemValue, itemIndex) => setSelectedValue(s =>  itemValue)}
+                    style={{ width: "100%", height: "100%",
+                        backgroundColor: Colors.background.DEFAULT,
+                        padding: 10,
+                        //marginLeft: 10
+                        }}
+                  >
+                    {
+                        networks && networks.length > 0?
+                        networks :
+                        <Picker.Item
+                        label={"No available Network"}
+                        value={null}
+                        />
+                        }
+                 </Picker>
+                 </View>
+               </View>
+                  </>
                 }
-         </Picker>
-         </View>
-       </View>
 
 
-       { selectedValue && (
-           <View className="p-3 w-[90vw] bg-white rounded-lg"
-           >
-           <View className="rounded-xl h-[50]"
-           style={{overflow: 'hidden'}}
-           >
-            <Picker
-                selectedValue={selectedType}
-                onValueChange={(itemValue, itemIndex) => setSelectedType( s => itemValue)}
-                style={styles.picker}
-              >
-                {
-                    sameType && sameType.length > 0 ?
-                    sameType?.map((item) => (
-                            <Picker.Item
-                            key={item.id}
-                            label={item.name}
-                            value={item.id}
-                            />
-                          )
-                      ) :
-                   <Picker.Item
-                    label={"No available plan Type"}
-                    value={null}
-                    />
-                    }
-             </Picker>
-             </View>
-           </View>
-       )}
-       </>
-       }
-       { selectedType && (
-           <View className="flex-1 w-[90vw] bg-white rounded-lg">
-               { samePlans && samePlans.length > 0 ?
+       { sameType && (
+           <View className="w-[90vw] bg-white rounded-xl flex-1">
+               { sameType && sameType.length > 0 ?
                 <FlatList
-                    data={samePlans}
+                    data={sameType}
                     renderItem={ ({item}) => (
                         <TouchableOpacity
-                         onPress={() => handleDataPurchase(item)}
+                         onPress={() => handleValidate(item)}
                          className="items-center justify-center
-                         w-[23vw] h-[100] bg-primary-200 m-2
-                         shadow-lg shadow-primary rounded-lg"
+                         w-[40vw] bg-primary-200 m-2
+                         shadow-lg shadow-primary rounded-lg min-h-[100]"
                          >
-                            <Text className="font-pextrabold">{item.plan_name}</Text>
-                            <Text>{`${item.validity_days} Days`}</Text>
-                            <Text>@</Text>
-                            <Text className="font-psemibold">{`${new Intl.NumberFormat(
-                                "en-NG", {style: "currency", currency: "NGN"}).format(
-                                    item[`user${user.type[user.type.length - 1]}_price`])}`}</Text>
+                            <Text className="font-psemibold text-center">
+                                {item?.name}
+                            </Text>
+
+                            <Text className="my-2">Pay</Text>
+                            <Text
+                            className="font-psemibold"
+                            >
+                                {
+                                    handleFormatAmount(item?.amount)
+                                }
+                                </Text>
                         </TouchableOpacity>
                         )}
                     keyExtractor={ (item) => item.id}
-                    numColumns={3}
+                    numColumns={2}
                     contentContainerStyle={{
-                        flexGrow: 1,
                         justifyContent: "center",
+                        flexGrow: 1,
                         alignItems: "center",
                         backgroundColor: Colors.white,
                         padding: 15
 
                         }}
+
                 /> :
                 <View className="w-[90vw] bg-white rounded-lg h-[80] justify-center items-center">
                     <Text>No available Plan</Text>
@@ -449,6 +383,8 @@ const App = () => {
                 }
            </View>
        )}
+
+
 
        </View>
        <CustomBottomSheet
@@ -466,24 +402,29 @@ const App = () => {
             style={{ flexGrow: 1}}
             >
                 <View className="bg-white mt-4 p-4 rounded-lg">
+
                     <View className="flex-row justify-between width-[100%]">
-                        <Text className="font-pthin text-lg">Phone Number</Text>
-                        <Text className="font-psemibold text-lg">{phone}</Text>
+                        <Text className="font-pthin text-lg">Name</Text>
+                        <Text className="font-psemibold text-lg">
+                            {name}
+                        </Text>
                     </View>
 
                     <View className="flex-row justify-between width-[100%]">
-                        <Text className="font-pthin text-lg">Network</Text>
-                        <Text className="font-psemibold text-lg">{plan?.network_id}</Text>
+                        <Text className="font-pthin text-lg">Card Number</Text>
+                        <Text className="font-psemibold text-lg">{cardNumber}</Text>
+                    </View>
+
+                    <View className="flex-row justify-between width-[100%]">
+                        <Text className="font-pthin text-lg">amount</Text>
+                        <Text className="font-psemibold text-lg">{handleFormatAmount(amount)}</Text>
                     </View>
 
                     <View className="flex-row justify-between width-[100%]">
                         <Text className="font-pthin text-lg">Plan</Text>
-                        <Text className="font-psemibold text-lg">{selectedPlanName}</Text>
-                    </View>
-
-                    <View className="flex-row justify-between width-[100%]">
-                        <Text className="font-pthin text-lg">Amount</Text>
-                        <Text className="font-psemibold text-lg">{selectedPlanAmount}</Text>
+                        <Text className="font-psemibold text-lg">
+                            {plan?.name}
+                        </Text>
                     </View>
                 </View>
                 <View className="bg-white rounded-lg">
@@ -496,6 +437,7 @@ const App = () => {
             </View>
             }
         />
+
     </SafeAreaView>
   );
 };

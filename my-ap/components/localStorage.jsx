@@ -5,7 +5,7 @@ export const getItem = async (item) => {
         try {
             let userData = await AsyncStorage.getItem(item);
             if (userData) {
-                console.log(userData)
+                console.log("userData fetch successfully")
                 } else {
                 console.log(`${item} not found`)
                 }

@@ -1,6 +1,6 @@
-import React, { useRef, useState, useContext } from 'react';
+import React, { useRef, useState, useContext, useEffect } from 'react';
 import { View, TextInput, StyleSheet, Keyboard,
-    TouchableOpacity, Text, Alert, Platform } from 'react-native';
+    TouchableOpacity, Text, Alert } from 'react-native';
 import {BottomSheetView, BottomSheetTextInput } from "@gorhom/bottom-sheet"
 import {GlobalContext} from "@/context/globalProvider";
 import {router} from "expo-router"
@@ -9,11 +9,17 @@ import fingerPrint from "@/components/fingerPrint";
 import AntDesign from '@expo/vector-icons/AntDesign';
 import CustomAlert from "@/components/customAlert"
 
-export default function App({handleClose, handleSuccessVerification, title}) {
+export default function CreatePin({handleClose, handleSuccessVerification, title, hideButtons, isFocus}) {
     const [pin, setPin] = useState(['', '', '', '']);
     const inputs = useRef([]);
-    const {setIsLogIn, user} = useContext(GlobalContext);
+    const {setIsLogIn} = useContext(GlobalContext);
     const [error, setError] = useState(false)
+//     const inputRef = useRef(null);
+
+//     useEffect(() => {
+//     // Focus the TextInput on component mount
+//         inputRef.current.focus();
+//     }, []);
 
     const handleChange = (value, index) => {
         const newPin = [...pin];
@@ -27,13 +33,7 @@ export default function App({handleClose, handleSuccessVerification, title}) {
             } else {
                 Keyboard.dismiss(); // Hide the keyboard when the last input is filled
                 const p = pin.toString().replaceAll(",", "") + value;
-                //console.log(p)
-                if (p == user?.pin) {
-                    handleSuccessVerification()
-                    } else {
-                        setPin(['', '', '', ''])
-                        setError(true)
-                        }
+                handleSuccessVerification(p)
             }
         }
     };
@@ -75,43 +75,65 @@ export default function App({handleClose, handleSuccessVerification, title}) {
             className=""
             >Enter 4-digit PIN:</Text>
             <BottomSheetView c style={styles.pinContainer}>
-                {pin.map((_, index) => (
+{/*                 {pin.map((_, index) => ( */}
                     <TextInput
-                        key={index}
-                        ref={(ref) => (inputs.current[index] = ref)} // Assign ref
+                      //  key={0}
+                        ref={(ref) => (inputs.current[0] = ref)} // Assign ref
                         style={styles.input}
                         maxLength={1}
                         //onFocus={}
                         keyboardType="number-pad"
-                        value={pin[index]}
-                        onChangeText={(value) => handleChange(value, index)}
-                        onKeyPress={(e) => handleKeyPress(e, index)}
+                        value={pin[0]}
+                        onChangeText={(value) => handleChange(value, 0)}
+                        onKeyPress={(e) => handleKeyPress(e, 0)}
                         secureTextEntry={true}
-                        //autoFocus={index === 0} // Auto-focus on the first input
+                        autoFocus={isFocus} // Auto-focus on the first input
                     />
-                ))}
+
+                    <TextInput
+                      //  key={0}
+                        ref={(ref) => (inputs.current[1] = ref)} // Assign ref
+                        style={styles.input}
+                        maxLength={1}
+                        //onFocus={}
+                        keyboardType="number-pad"
+                        value={pin[1]}
+                        onChangeText={(value) => handleChange(value, 1)}
+                        onKeyPress={(e) => handleKeyPress(e, 1)}
+                        secureTextEntry={true}
+                        //autoFocus={(0 === 0)  && isFocus} // Auto-focus on the first input
+                    />
+
+                    <TextInput
+                      //  key={0}
+                        ref={(ref) => (inputs.current[2] = ref)} // Assign ref
+                        style={styles.input}
+                        maxLength={1}
+                        //onFocus={}
+                        keyboardType="number-pad"
+                        value={pin[2]}
+                        onChangeText={(value) => handleChange(value, 2)}
+                        onKeyPress={(e) => handleKeyPress(e, 2)}
+                        secureTextEntry={true}
+                       // autoFocus={(0 === 0)  && isFocus} // Auto-focus on the first input
+                    />
+
+                    <TextInput
+                      //  key={0}
+                        ref={(ref) => (inputs.current[3] = ref)} // Assign ref
+                        style={styles.input}
+                        maxLength={1}
+                        //onFocus={}
+                        keyboardType="number-pad"
+                        value={pin[3]}
+                        onChangeText={(value) => handleChange(value, 3)}
+                        onKeyPress={(e) => handleKeyPress(e, 3)}
+                        secureTextEntry={true}
+                        //autoFocus={(0 === 0)  && isFocus} // Auto-focus on the first input
+                    />
+{/*                 ))} */}
             </BottomSheetView>
 
-            <BottomSheetView className="items-center flex-row justify-around gap-4 mt-[20]">
-                <TouchableOpacity
-                className="w-[150] h-[60] rounded-lg bg-green-500 items-center justify-center"
-                onPress={ () => handleClose() }
-                >
-                    <Text className="text-lg text-white">Close</Text>
-                </TouchableOpacity>
-
-                { Platform.OS !== "web" && (
-                <TouchableOpacity
-                className="w-[150] h-[60] items-center justify-center bg-primary-200 rounded-lg"
-                onPress = { () => fingerPrint()
-                    .then((res) => res === true && handleSuccessVerification())
-                    .catch((err) => console.log(err))
-                    }
-                >
-                    <Ionicons name="finger-print-outline" size={40} color={"black"} />
-                </TouchableOpacity>
-                )}
-            </BottomSheetView>
         </BottomSheetView>
     );
 }

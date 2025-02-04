@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { View, Text, ActivityIndicator } from 'react-native';
 import { Colors } from '@/constants/Colors';
 import CustomBottomSheet from '@/components/customBottomSheet';
 
@@ -15,13 +15,17 @@ const Loading = ({ loading }) => {
   }, [loading]);
 
   return (
-    <CustomBottomSheet
-      title="Loading ..."
-      ref={ref}
-      components={
-        <ActivityIndicator size="large" color={Colors.primary.DEFAULT} />
-      }
-    />
+        <CustomBottomSheet
+          ref={ref}
+          components={
+           <>
+            <ActivityIndicator size="large" color={Colors.primary.DEFAULT} />
+            <View className="mt-2">
+                <Text className="font-pregular">Loading...</Text>
+            </View>
+           </>
+          }
+        />
   );
 };
 

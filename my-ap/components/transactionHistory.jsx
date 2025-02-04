@@ -5,7 +5,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 const TransactionHistory = ({ date, status, amount, description, type }) => {
   return (
-    <View className="flex-row items-center gap-4 p-4 bg-white rounded-lg">
+    <View className="flex-row items-center gap-4 p-2">
       {/* Icon Container */}
       <View
         className="w-12 h-12 items-center justify-center rounded-full"

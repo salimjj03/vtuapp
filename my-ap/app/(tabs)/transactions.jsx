@@ -16,17 +16,18 @@ import { Picker } from '@react-native-picker/picker';
 import {Colors} from "@/constants/Colors"
 import TransactionHistory from "@/components/transactionHistory"
 import {useRouter} from "expo-router"
-
-
+import Refresh from "@/components/refresh"
 
 const Transactions = () => {
 
     const router = useRouter();
-    const {user, setIsLogIn} = useContext(GlobalContext);
+    const {user, setIsLogIn, setSingleTransaction} = useContext(GlobalContext);
     const [transactions, setTransactions] = useState([]);
     const [searchValue, setSearchValue] = useState([])
     const [query, setQuery] = useState("")
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(false)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect( () => {
 
@@ -35,6 +36,7 @@ const Transactions = () => {
                 return
                 }
             setLoading(true)
+            setError(false)
             try{
                   const [transactionsData] = await Promise.all([
                         axios.get(`${config.API_URL}/transactions`, {
@@ -46,25 +48,28 @@ const Transactions = () => {
 
                   setTransactions(transactionsData?.data)
                   setSearchValue(transactionsData?.data)
-                  console.log(transactionsData?.data)
+
 
                 } catch (err) {
                     if (err?.response?.status === 401) {
                         handleLogout(setIsLogIn)
                     }
-                    console.log(err)
-
+                    //console.log(err)
+                    //setError(true)
+                    if (err?.response?.data?.message != "No transactions found") {
+                        setError(true)
+                    }
                     } finally {
                         setLoading(false)
                         }
         }
     fetchData()
-    }, [user] )
+    }, [user, refresh] )
 
     const onSearch = (query) => {
         setQuery(query)
         const filtered =  transactions?.filter(
-            (item) => item.t_disc.toLowerCase().includes(query.toLowerCase()) ||
+            (item) => item.t_type.toLowerCase().includes(query.toLowerCase()) ||
             item.status.toLowerCase().includes(query.toLowerCase())
 
             )
@@ -73,12 +78,12 @@ const Transactions = () => {
 
   return (
     <SafeAreaView
-    className="bg-background"
+    className="bg-background gap-4 my-4"
     style={styles.container}
     >
 
-       <View className="flex-1 w-[95vw] gap-3 mt-4">
-           <View className="p-4 bg-white rounded-lg m-1">
+{/*        <View className="flex-1 w-[95vw] gap-3 my-4  items-center rounded-xl"> */}
+           <View className="p-4 bg-white rounded-lg m-1 w-[90vw]">
                <View className="h-8 flex-row justify-between">
                    <Text className="font-thin">Total</Text>
                    <Text className="font-semibold">{searchValue.length}</Text>
@@ -90,12 +95,30 @@ const Transactions = () => {
                />
            </View>
 
+            { (error || loading ) ?
+            <View className="h-[80vh]">
+            <Refresh
+                loading={loading}
+                setRefresh={setRefresh}
+                error={error}
+                setError={setError}
+            />
+            </View> :
+
+            <View className="w-[90vw] flex-1 rounded-lg">
+            { searchValue && searchValue.length == 0 ?
+                <View className="h-[50] items-center bg-primary-200 justify-center rounded-xl">
+                    <Text>No transaction found!</Text>
+                </View>:
             <FlatList
                 data={searchValue}
                 renderItem={ ({item}) => (
                     <TouchableOpacity
-                    onPress= {() => router.push(`/transaction/${item.id}`)}
-                    className="m-1"
+                    onPress= {() => {
+                        setSingleTransaction(item)
+                        router.push(`/transaction/${item.id}`)
+                        }}
+                    className="m-1 bg-white rounded-xl"
                     >
                         <TransactionHistory
                             amount={item?.amount}
@@ -106,9 +129,12 @@ const Transactions = () => {
                         />
                     </TouchableOpacity>
                     )}
-                keyExtractor={ (item) => item.id}
+                keyExtractor={ (item) => item?.id}
             />
-       </View>
+            }
+            </View>
+            }
+{/*        </View> */}
     </SafeAreaView>
   );
 };

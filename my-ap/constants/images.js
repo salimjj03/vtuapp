@@ -9,7 +9,8 @@ import mtn from "../assets/images/mtn.png";
 import glo from "../assets/images/glo.png";
 import nmobile from "../assets/images/9mobile.png";
 import airtel from "../assets/images/airtel.png";
+import home from "../assets/images/home.png";
 
 export default { profile, thumbnail, cards,
                 path, logo, logoSmall, empty,
-                mtn, nmobile, glo, airtel};
+                mtn, nmobile, glo, airtel, home};
