@@ -22,7 +22,7 @@ function TabLayout(){
     headerShown: false,
     tabBarStyle: {
       height: 60,
-      backgroundColor: Colors.primary.DEFAULT,
+      backgroundColor: Platform.OS === "web" ? "white" : Colors.primary.DEFAULT,
       paddingTop: 10,
       borderTopLeftRadius: 15,
       borderTopRightRadius: 15,
@@ -31,6 +31,7 @@ function TabLayout(){
     tabBarShowLabel: false,
   }}
 >
+
   <Tabs.Screen
     name="home"
     options={{
@@ -40,7 +41,7 @@ function TabLayout(){
           <MaterialCommunityIcons
             name={focused ? "home-minus" : "home-minus-outline"}
             size={30}
-            color={focused ? "white" : Colors.gray.DEFAULT}
+            color={ Platform.OS === "web" ? focused ? Colors.primary.DEFAULT : Colors.primary.first : focused ? "white" : Colors.gray.DEFAULT}
           />
           <Text className={`${focused ? "font-psemibold text-white" : "font-pregular text-gray-200"}`} style={styles.text}>
             Home
@@ -59,7 +60,7 @@ function TabLayout(){
           <MaterialCommunityIcons
             name={focused ? "file-find" : "file-find-outline"}
             size={30}
-            color={focused ? "white" : Colors.gray.DEFAULT}
+            color={ Platform.OS === "web" ? focused ? Colors.primary.DEFAULT : Colors.primary.first : focused ? "white" : Colors.gray.DEFAULT}
           />
           <Text className={`${focused ? "font-psemibold text-white" : "font-pregular text-gray-200"}`} style={styles.text}>
             History
@@ -69,10 +70,12 @@ function TabLayout(){
     }}
   />
 
+
   <Tabs.Screen
     name="more"
     options={{
       headerShown: false,
+      href: Platform.OS === "web" && null,
       tabBarIcon: ({ focused }) => (
         <View className="justify-center items-center" style={styles.floatingButton}>
           <MaterialCommunityIcons
@@ -86,6 +89,7 @@ function TabLayout(){
     }}
   />
 
+
   <Tabs.Screen
     name="support"
     options={{
@@ -95,7 +99,7 @@ function TabLayout(){
           <MaterialCommunityIcons
             name="face-agent"
             size={30}
-            color={focused ? "white" : Colors.gray.DEFAULT}
+            color={ Platform.OS === "web" ? focused ? Colors.primary.DEFAULT : Colors.primary.first : focused ? "white" : Colors.gray.DEFAULT}
           />
           <Text className={`${focused ? "font-psemibold text-white" : "font-pregular text-gray-200"}`} style={styles.text}>
             Support
@@ -114,7 +118,7 @@ function TabLayout(){
           <MaterialCommunityIcons
             name="account"
             size={30}
-            color={focused ? "white" : Colors.gray.DEFAULT}
+            color={ Platform.OS === "web" ? focused ? Colors.primary.DEFAULT : Colors.primary.first : focused ? "white" : Colors.gray.DEFAULT}
           />
           <Text className={`${focused ? "font-psemibold text-white" : "font-pregular text-gray-200"}`} style={styles.text}>
             Profile

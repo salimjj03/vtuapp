@@ -1,6 +1,6 @@
 import React, {useState, useContext} from "react";
 import {View, Text, StyleSheet, ScrollView,
-    Image} from "react-native";
+    Image, TouchableOpacity} from "react-native";
 import {SafeAreaView} from "react-native-safe-area-context"
 import FormField from "@/components/formField"
 import CustomButton from "@/components/customButton"
@@ -76,7 +76,8 @@ function SignIn(){
                 minHeight: "100%",
                 gap: 20
                 }}>
-                <View>
+                <TouchableOpacity
+                onPress={ () => router.push("/")}>
                 <Image
                 source={images.logo}
                 style={{
@@ -91,7 +92,7 @@ function SignIn(){
                 className="rounded-full"
                 resizeMode="contain"
                 />
-                </View>
+                </TouchableOpacity>
 
                 <Text className="font-psemibold text-xl">Welcome Back</Text>
                 <View className="bg-white justify-center

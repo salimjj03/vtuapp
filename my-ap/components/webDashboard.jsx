@@ -47,6 +47,7 @@ function Home() {
     const [isFocus, setIsFocus] = useState(false)
     const [showNotification, setShowNotification] = useState(false)
     const [commission, setCommission] = useState(0)
+    const [referrals, setReferrals] = useState(0)
 
     const [transactions, setTransactions ] = useState([]);
     const flatListRef = useRef(null);
@@ -101,6 +102,7 @@ function Home() {
                     setTransactions(res?.data?.transactions);
                     setBalance(res?.data?.user?.balance);
                     setCommission(res?.data?.user?.commission)
+                    setReferrals(res?.data?.ref)
                     setNotification(res?.data?.notifications)
                     setLoading(false);
                     if (user?.pin === null || user?.pin === "") {
@@ -176,12 +178,14 @@ function Home() {
             className="flex flex-row items-center justify-between
              top-0 left-0 z-10 w-[90vw] my-3 p-2"
              >
+                { notification?.length && (
                 <View className="w-[20] h-[20] right-0 rounded-full
                     bg-red-500 absolute top-0 justify-center items-center"
 
                     >
                         <Text className="text-white  text-center">{notification?.length}</Text>
                     </View>
+                    )}
                <View className="flex flex-row gap-3 items-center justify-between">
                     <View
                      style={{
@@ -221,17 +225,20 @@ function Home() {
 
             </View>
 
-                <View className="w-[90vw] flex-1 text-white
-                h-[screen] rounded-xl mb-[10] overflow-hidden">
+                <View className="w-[90vw] flex-1  text-white
+                h-[screen] rounded-xl mb-[10] overflow-hidden" >
                     <FlatList
                      ListHeaderComponent={
 
                  <View className="mb-2 rounded-xl" style={{ gap: 20 }}>
-                 <View className="w-[90vw] text-white bg-primary rounded-xl items-center" style={{ height: ""}}>
+
+                <View className="justify-center items-center">
+                 <View className="w-[80vw] text-white bg-white shadow   rounded-xl items-center" style={{ height: 300}}>
                     <View
                     className="flex-row items-center justify-between
-                     top-0 left-0 z-10 w-[90%] rounded-xl m-4 p-2 border border-gray-200"
+                     top-0 left-0 z-10 w-[90%] bg-primary rounded-xl m-4 p-2 border border-gray-200"
                      >
+
                        <View className="flex flex-row gap-3 items-center justify-between ">
                             <View className="w-[30] h-[30] rounded-full shadow-lg">
                                 <Image
@@ -255,22 +262,19 @@ function Home() {
 
                     </View>
 
-{/*                     balance */}
-
                   { !loading && !error && (
-
-                   <View className="w-[100%] flex flex-col text-white p-3
-                   bg-white  gap-4 rounded-xl shadow-xl justify-center" style={{ height: 300 }}>
+                  <View className="gap-4 w-[90vw] justify-center items-center">
+                   <View className="w-[70%] flex flex-col text-white p-3
+                    gap-4 justify-center" style={{ height: 100 }}>
                      <View className="justify-center items-center gap-3">
                        <View className="flex gap-4 justify-center flex-row">
                            <View className="">
-                               <Text className="text-5xl font-semibold text-primary">
+                               <Text className="text-3xl font-semibold text-primary">
                                     { isVisible ? handleAmount(balance) : "*****"}
                                </Text>
                            </View>
 
                            <View className="flex-row items-center gap-2">
-{/*                                <Text className="font-pregular text-white">Available Balance</Text> */}
                                <TouchableOpacity
                                   onPress={() => setIsVisible(i => !i)}
                                >
@@ -279,68 +283,33 @@ function Home() {
                            </View>
                        </View>
 
-                        <Text className="text-xl text-primary font-pregular">
-                           Total commission: <Text className="font-psemibold">{handleAmount(commission)}</Text>
-                        </Text>
-                    </View>
-
-                       <View className="border border-primary bg-primary"></View>
-
-                       <View className="flex flex-row  justify-around">
-                        <View className="items-center">
-                            <TouchableOpacity
-                            onPress={() => router.push("/addMoney")}
-                            className="w-[45] h-[45] bg-primary rounded-full
-                            justify-center items-center"
-                            >
-                                 <FontAwesome6
-                                    name= "money-bill-transfer"
-                                    size={20}
-                                    color={ "white" }
-                                 />
-                            </TouchableOpacity>
-                            <Text className="text-primary font-pregular" >Fund</Text>
-                        </View>
-
-                        <View className="items-center">
-                            <TouchableOpacity
-                            onPress={() => router.push("/transfer")}
-                            className="w-[45] h-[45] bg-primary rounded-full
-                            justify-center items-center"
-                            >
-                                 <MaterialCommunityIcons
-                                     name="bank-transfer"
-                                     size={30}
-                                     color={"white"}
-                                 />
-                            </TouchableOpacity>
-                            <Text className="text-primary font-pregular" >Transfer</Text>
-                        </View>
-
-                        <View className="items-center">
-                            <TouchableOpacity
-                            onPress={() => router.push("/transactions")}
-                            className="w-[45] h-[45] bg-primary rounded-full
-                            justify-center items-center"
-                            >
-                                 <MaterialCommunityIcons
-                                     name="note-search-outline"
-                                     size={24}
-                                     color={"white"}
-                                 />
-
-                            </TouchableOpacity>
-                            <Text className="text-primary font-pregular" >History</Text>
-                        </View>
 
                     </View>
 
                    </View>
 
+                   <View className="border border-primary bg-primary w-[70%]"></View>
+
+                   <View className="flex flex-row  w-[90%] justify-around">
+
+                        <View className="justify-center items-center">
+                           <Text style={{color: "#F1C40F"}} className="text-lg  font-pregular">Commission</Text>
+                           <Text style={{color: "#F1C40F"}} className="font-psemibold text-xl">{handleAmount(commission)}</Text>
+                        </View>
+
+                        <View className="justify-center items-center">
+                           <Text style={{color: "#8E44AD"}} className="text-lg  font-pregular">Referrals</Text>
+                           <Text style={{color: "#8E44AD"}} className="font-psemibold text-xl text-white">{referrals}</Text>
+                        </View>
+
+
+                   </View>
+                 </View>
+
                      )}
 
                      { (loading || error) && (
-                       <View className="h-[150] items-center justify-center">
+                       <View className="h-[150] items-center justify-center w-[50%]" >
                             <Refresh
                             loading={loading}
                             setRefresh={setRefresh}
@@ -349,6 +318,9 @@ function Home() {
                             />
                         </View>
                     )}
+
+
+                </View>
                 </View>
 
                 <View className="" style={{ padding: 1}}>
@@ -471,7 +443,7 @@ function Home() {
                              <MaterialCommunityIcons
                                  name="bank-transfer"
                                  size={30}
-                                 color={Colors.primary.DEFAULT}
+                                 color={"#27AE60"}
                              />
                              }
                         />

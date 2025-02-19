@@ -89,6 +89,7 @@ const ProfileUpdate = () => {
                 title={response?.status}
                 response={response?.message}
                 onClose={handleClose}
+                containerStyle="bg-primary"
                 />
                 )}
                 <View className="bg-white p-4 my-4 gap-3 rounded-xl gap-4">
@@ -104,6 +105,7 @@ const ProfileUpdate = () => {
                     <CustomButton
                     title={"Change Pin"}
                     onPress={ () => handlePinUpdate("pin")}
+                    containerStyle="bg-primary"
                     />
                 </View>
 
@@ -119,6 +121,7 @@ const ProfileUpdate = () => {
                     <CustomButton
                     title={"Change Password"}
                     onPress={ () => handlePinUpdate("password")}
+                    containerStyle="bg-primary"
                     />
                 </View>
             </View>

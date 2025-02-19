@@ -6,9 +6,9 @@ import {Colors} from "@/constants/Colors"
 const Refresh = ({loading, error, setError, setRefresh}) => {
 
   return (
-      <View>
+      <View className="w-[90%]">
        {(loading || error) && (
-           <View className="w-[90vw] flex-row items-center mb-4 justify-center
+           <View className="w-[90%] flex-row items-center mb-4 justify-center
             bg-white p-3 rounded-lg gap-3 flex-1">
             { error ?
                 <View className="flex-col items-center">

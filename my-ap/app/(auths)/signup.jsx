@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  Keyboard,
+  Keyboard, TouchableOpacity
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/formField";
@@ -124,7 +124,9 @@ function SignUp() {
               paddingBottom: 20,
             }}
           >
-            <View className="my-4">
+             <TouchableOpacity
+                onPress={ () => router.push("/")}
+                className="m-4">
               <Image
                 source={images.logo}
                 style={{
@@ -139,7 +141,7 @@ function SignUp() {
                 className="rounded-full"
                 resizeMode="contain"
               />
-            </View>
+            </TouchableOpacity>
 
             {response && (
               <CustomAlert

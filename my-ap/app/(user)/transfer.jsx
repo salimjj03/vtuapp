@@ -92,7 +92,7 @@ const Transfer = () => {
         setIsPhone(false)
         setIsVerify(false)
         ref.current.close()
-        router.replace("/home")
+        //router.replace("/home")
         }
 
     const handleTransfer = () => {
@@ -201,10 +201,11 @@ const Transfer = () => {
                                  <View
                                   className="w-[50] h-[50] rounded-full justify-center items-center bg-primary"
                                   >
-                                     <Text
-                                      className="text-white psemibold uppercase bold text-2xl">
-                                        {userName && userName[0]}
-                                      </Text>
+                                     { user?.user_name && (
+                                        <Text className="font-bold text-white text-4xl uppercase">
+                                            {user?.user_name[0]}
+                                        </Text>
+                                        )}
                                  </View>
                                  <View>
                                      <Text className="font-psemibold uppercase">{fullName}</Text>

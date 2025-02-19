@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Image } from "react-native";
-import images from "@/constants/images"
 import CustomButton from "@/components/customButton"
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Entypo from '@expo/vector-icons/Entypo';
@@ -14,6 +13,7 @@ import Foundation from '@expo/vector-icons/Foundation';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import axios from "axios"
+import images from "@/constants/images"
 import { config } from "@/config"
 import {router} from "expo-router"
 import FontAwesome from '@expo/vector-icons/FontAwesome';
@@ -33,19 +33,45 @@ const HomePage = () => {
     const [homeData, setHomeData] = useState(null);
     const [modalVisible, setModalVisible] = useState(false); // Modal visibility
     const [selectedPhoneNumber, setSelectedPhoneNumber] = useState("");
+    const [selectedPlan, setSelectedPlan] = useState(null)
+    const [selectedNetwork, setSelectedNetwork] = useState("MTN");
+    const [plans, setPlans] = useState([])
+    //const [network, setNetwork] = useState()
+
+  useEffect(  () => {
+      if (plans?.length > 0) {
+          setSelectedPlan(plans[0])
+          }
+      }, [plans])
 
   useEffect( () => {
       axios.get(`${config.API_URL}/get_data`)
       .then( res => {
           setHomeData(res?.data)
-          console.log(res?.data)
+          //selectedNetwork("MTN")
           })
       .catch( err => {
           console.log(err?.response?.data)
           })
 
       }, [] )
-  const [selectedNetwork, setSelectedNetwork] = useState("MTN");
+
+  useEffect( () => {
+      if (homeData?.plans[selectedNetwork]?.length > 0){
+          let plan = homeData?.plans[selectedNetwork]
+          setPlans([])
+
+          let uniquePlans = new Set();
+
+          for (let p of plan) {
+              uniquePlans.add(p.type)
+              }
+          setPlans([...uniquePlans])
+          console.log([...uniquePlans])
+          console.log(plan)
+          }
+
+      }, [selectedNetwork, homeData])
 
 
   const isMobile = width < 800; // Adjust the breakpoint as needed
@@ -205,81 +231,81 @@ const HomePage = () => {
                 >
                     <View className="flexGrow-1 ">
                         <View className="flex-row items-center gap-4 x p-4">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
                                 <MaterialCommunityIcons
                                     name= "cellphone-nfc"
-                                    size={60}
+                                    size={50}
                                     color={ Colors.primary.DEFAULT }
                                  />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Data</Text>
+                                <Text className="font-psemibold text-lg text-primary">Data</Text>
                                 <Text>Purchased data is credited immediately </Text>
                              </View>
                         </View>
 
                          <View className="flex-row items-center gap-4 p-4">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
                                 <FontAwesome5
                                     name="phone-square"
-                                    size={60}
-                                    color={ Colors.primary.DEFAULT }
+                                    size={50}
+                                    color={ "#3498DB" }
                                     />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Airtime top-up</Text>
+                                <Text className="font-psemibold text-lg text-primary">Airtime top-up</Text>
                                 <Text>ensures seamless communication without running out of balance. </Text>
                              </View>
                         </View>
 
                         <View className="flex-row items-center gap-4 p-4">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
                                 <Foundation
                                     name= "lightbulb"
-                                    size={60}
-                                    color={ Colors.primary.DEFAULT }
+                                    size={50}
+                                    color={ "#FF5733" }
                                  />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Bills</Text>
+                                <Text className="font-psemibold text-lg text-primary">Bills</Text>
                                 <Text>Pay your bills securely and effortlessly with our easy-to-use platform. </Text>
                              </View>
                         </View>
 
                         <View className="flex-row items-center gap-4  p-4">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
                                 <Ionicons
                                     name= "receipt"
-                                    size={60}
-                                    color={ Colors.primary.DEFAULT }
+                                    size={50}
+                                    color={ "#8E44AD" }
                                  />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Cable subscription</Text>
+                                <Text className="font-psemibold text-lg text-primary">Cable subscription</Text>
                                 <Text>Stay connected with your favorite channels! Pay for your cable subscription quickly and securely through our platform. Just enter your details, select your plan, and enjoy uninterrupted entertainment. </Text>
                              </View>
                         </View>
 
                         <View className="flex-row items-center gap-4 p-4 ">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
                                 <MaterialCommunityIcons
                                      name="bank-transfer"
-                                     size={60}
-                                     color={Colors.primary.DEFAULT}
+                                     size={50}
+                                     color={"#F1C40F"}
                                  />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Airtime To cash</Text>
+                                <Text className="font-psemibold text-lg text-primary">Airtime To cash</Text>
                                 <Text>Convert your airtime to cash instantly! Our platform offers fast and secure airtime-to-cash transactions at great rates </Text>
                              </View>
                         </View>
 
                         <View className="flex-row items-center gap-4 p-4">
-                             <View className="rounded-full bg-primary-200 h-[100] w-[100] justify-center items-center">
-                                <FontAwesome5 name="sms" size={60} color={Colors.primary.DEFAULT} />
+                             <View className="rounded-full bg-primary-200 h-[80] w-[80] justify-center items-center">
+                                <FontAwesome5 name="sms" size={50} color={"#E74C3C"} />
                              </View>
                              <View className="bg-white rounded-xl p-3 shadow shadow-primary" style={{ maxWidth: "60%"}}>
-                                <Text className="font-psemibold text-xl text-primary">Bulk SMS</Text>
+                                <Text className="font-psemibold text-lg text-primary">Bulk SMS</Text>
                                 <Text>Send bulk SMS quickly and affordably! Reach your audience with instant, reliable messaging for promotions, alerts, and more. Enjoy fast delivery and competitive rates.</Text>
                              </View>
                         </View>
@@ -294,25 +320,57 @@ const HomePage = () => {
 
 
 {/*         <Section title="Become An Agent" content="Join our network and start earning today!" /> */}
-        <View style={styles.section}>
+        <View style={styles.section} className="gap-4">
           <Text style={styles.sectionTitle}>Data Plan And Prices</Text>
           { homeData?.plans && (
-          <View style={styles.networkSelector}>
+          <View style={styles.networkSelector} className="gap-5">
             {Object.keys(homeData?.plans).map((network) => (
-              <TouchableOpacity key={network} style={styles.networkButton} onPress={() => setSelectedNetwork(network)}>
-                <Text style={styles.networkButtonText}>{network}</Text>
+              <TouchableOpacity key={network} style={styles.networkButtons}
+               onPress={() => {
+                   setSelectedNetwork(network)
+                   }
+               }
+                  className="bg-gray rounded-full">
+                <Image
+                source={
+                    network == "MTN" ? images.mtn
+                    : network == "AIRTEL" ? images.airtel
+                    : network == "GLO" ? images.glo
+                    : network == "9MOBILE" ? images.nmobile
+                    : ""
+                    }
+                resizeMode="contain"
+                style={{
+                    width: 50,
+                    height: 50,
+                    }}
+                className="rounded-full "
+                />
+
               </TouchableOpacity>
             ))}
           </View>
           )}
-          {selectedNetwork && (
+
+          { plans?.length > 0 && (
+          <View style={styles.networkSelecstor} className="gap-4">
+            {plans.map((p) => (
+              <TouchableOpacity key={p} style={styles.networkButtons} onPress={() => setSelectedPlan(p)}
+                  className="bg-gray rounded-xl h-[40] w-[180] justify-center items-center">
+                <Text>{p}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          )}
+
+          {selectedPlan && (
             <View style={styles.tableContainer}>
-              <Text style={styles.tableHeader}>{selectedNetwork}</Text>
+              <Text style={styles.tableHeader}>{selectedNetwork} {selectedPlan}</Text>
               <View style={styles.table}>
-                {homeData?.plans[selectedNetwork].map((plan, index) => (
+                {homeData?.plans[selectedNetwork]?.filter( (p) => p.type == selectedPlan )?.map((plan, index) => (
                   <View key={index} style={styles.tableRow}>
-                    <Text style={styles.tableCell} className="font-psemibold">{plan.type}</Text>
-                    <Text style={styles.tableCell} className="font-psemibold" >{plan.name}</Text>
+                    <Text style={styles.tableCell} className="font-psemibold">{plan.type == "CORPORATE-GIFTING" ? "CG" : plan.type}</Text>
+                    <Text style={styles.tableCell} className="font-psemibold">{plan.name}</Text>
                     <Text style={styles.tableCell} className="font-psemibold">₦{plan.price}</Text>
                     <Text style={styles.tableCell} className="font-psemibold">{plan.validity} Days</Text>
                   </View>
@@ -358,6 +416,22 @@ const HomePage = () => {
                  </View>
             </View>
 
+            <View style={[styles.featureCard, isMobile && styles.featureCardMobile]}>
+
+                <Text style={styles.sectionTitle} className="font-thin mt-2">Address</Text>
+                 <View className="rounded-xl bg-white p-2">
+                    <View className="flex-row gap-3 items-center">
+                        <View className="w-[50] h-[50] justify-center items-center bg-gray-100 rounded-full">
+                            <Entypo name="address" size={24} color="green" />
+                        </View>
+                        <View className=" w-[80%] gap-2">
+                            <Text className="font-bold">Address</Text>
+                            <Text className="">adjacent Adamu memorial school, bayan gidan radio, dutse, jigawa</Text>
+                        </View>
+                    </View>
+                 </View>
+            </View>
+
 
           </View>
         </View>
@@ -396,7 +470,7 @@ const styles = StyleSheet.create({
   footer: { backgroundColor: "#333", padding: 20, alignItems: "center", borderTopLeftRadius: 20, borderTopRightRadius: 20 },
   footerText: { fontSize: 16, color: "#fff" },
   networkSelector: { flexDirection: "row", justifyContent: "space-around", marginBottom: 10, gap: 10 },
-  networkButton: { backgroundColor: Colors.primary.DEFAULT, padding: 10, borderRadius: 10 },
+  networkButton: { backgroundColor: Colors.primary.DEFAULT, padding: 1, borderRadius: 10 },
   networkButtonText: { color: "#fff", fontWeight: "bold" },
   tableContainer: { marginTop: 10, alignItems: "center" },
   tableHeader: { fontSize: 18, fontWeight: "bold", color: Colors.primary.DEFAULT, marginBottom: 5 },

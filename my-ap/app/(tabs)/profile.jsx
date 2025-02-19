@@ -48,7 +48,9 @@ const Profile = () => {
         >
             <View className="my-2 gap-4 items-center">
                 <View className="h-[70] w-[70] items-center justify-center bg-white rounded-full">
+                    { user?.user_name && (
                     <Text className="text-5xl uppercase text-primary">{user?.user_name[0]}</Text>
+                    )}
                 </View>
                 <Text className="font-psemibold text-lg uppercase">{user?.full_name}</Text>
             </View>

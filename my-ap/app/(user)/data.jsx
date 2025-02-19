@@ -133,10 +133,6 @@ const App = () => {
                       setPlanType(typeData.data)
 
                       setPlans(planData.data)
-                      console.log(planData)
-                      console.log(typeData)
-                      console.log(networkData)
-                      console.log(userBalance)
 
                     } catch (err) {
                         setError(true)
@@ -261,9 +257,11 @@ const App = () => {
                 className="flex justify-center items-center
                 rounded-full bg-primary w-[50] h-[50]"
             >
+            { user?.user_name && (
                 <Text className="font-bold text-white text-4xl uppercase">
                     {user?.user_name[0]}
                 </Text>
+                )}
             </View>
 
            <View className="flex justify-between">
